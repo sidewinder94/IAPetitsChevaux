@@ -2,11 +2,8 @@
 {
     public class Pawn
     {
-        public Case Position;
+        public CaseType Type;
+        public int Position;
 
-        public Pawn()
-        {
-            Position = new Case();
-        }
     }
 }

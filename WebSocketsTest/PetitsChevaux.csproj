@@ -54,14 +54,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\Game.cs" />
+    <Compile Include="Game\Board.cs" />
     <Compile Include="Game\Pawn.cs" />
     <Compile Include="Game\Player.cs" />
-    <Compile Include="Game\Case.cs" />
     <Compile Include="Game\CaseType.cs" />
-    <Compile Include="Plans\IPlan.cs" />
     <Compile Include="Plans\MiniMax.cs" />
-    <Compile Include="Plans\Random.cs" />
+    <Compile Include="Plans\SimpleMinded.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleEventingService.cs" />

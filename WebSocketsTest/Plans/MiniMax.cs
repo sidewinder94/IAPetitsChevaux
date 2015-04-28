@@ -1,16 +1,20 @@
-﻿using PetitsChevaux.Game;
+﻿using System;
+using PetitsChevaux.Game;
 
 namespace PetitsChevaux.Plans
 {
-    public class MiniMax : IPlan
+    public static class MiniMax
     {
-        #region Implementation of IPlan
 
-        public void NextMove(Player player)
+        public static void NextMove(Player player)
         {
             throw new System.NotImplementedException();
         }
 
-        #endregion
+        private static int Evaluation(Tuple<CaseType, int> position, Player player)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

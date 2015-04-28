@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.ServiceModel.WebSockets;
 
-namespace WebSocketsTest
+namespace PetitsChevaux
 {
     class Program
     {

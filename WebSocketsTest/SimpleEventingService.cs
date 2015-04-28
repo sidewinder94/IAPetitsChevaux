@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using Microsoft.ServiceModel.WebSockets;
 using Newtonsoft.Json;
+using PetitsChevaux.Game;
 
-namespace WebSocketsTest
+
+namespace PetitsChevaux
 {
     public class SimpleEventingService : WebSocketService
     {
@@ -18,18 +20,19 @@ namespace WebSocketsTest
             {
                 var dic = new Dictionary<String, int>
                 {
-                    {String.Format("c-{0}", normalize(i)), 1},
-                    {String.Format("c-{0}", normalize(i + 14)), 2},
-                    {String.Format("c-{0}", normalize(i + 28)), 3},
-                    {String.Format("c-{0}", normalize(i + 42)), 4},
-                    {String.Format("e-{0}-{1}", 1, normalize(i, 6, 1)), 0},
-                    {String.Format("e-{0}-{1}", 2, normalize(i, 6, 1)), 0},
-                    {String.Format("e-{0}-{1}", 3, normalize(i, 6, 1)), 0},
-                    {String.Format("e-{0}-{1}", 4, normalize(i, 6, 1)), 0},
-                    {String.Format("sq-{0}", 1), normalize(i, 4, 1)},
-                    {String.Format("sq-{0}", 2), normalize(i, 4, 1)},
-                    {String.Format("sq-{0}", 3), normalize(i, 4, 1)},
-                    {String.Format("sq-{0}", 4), normalize(i, 4, 1)}
+                
+                    {String.Format("c-{0}", Board.Normalize(i)), 1},
+                    {String.Format("c-{0}", Board.Normalize(i + 14)), 2},
+                    {String.Format("c-{0}", Board.Normalize(i + 28)), 3},
+                    {String.Format("c-{0}", Board.Normalize(i + 42)), 4},
+                    {String.Format("e-{0}-{1}", 1, Board.Normalize(i, 6, 1)), 0},
+                    {String.Format("e-{0}-{1}", 2, Board.Normalize(i, 6, 1)), 0},
+                    {String.Format("e-{0}-{1}", 3, Board.Normalize(i, 6, 1)), 0},
+                    {String.Format("e-{0}-{1}", 4, Board.Normalize(i, 6, 1)), 0},
+                    {String.Format("sq-{0}", 1), Board.Normalize(i, 4, 1)},
+                    {String.Format("sq-{0}", 2), Board.Normalize(i, 4, 1)},
+                    {String.Format("sq-{0}", 3), Board.Normalize(i, 4, 1)},
+                    {String.Format("sq-{0}", 4), Board.Normalize(i, 4, 1)}
                 };
                 Send(JsonConvert.SerializeObject(dic));
                 i++;
@@ -49,27 +52,6 @@ namespace WebSocketsTest
         }
 
         #endregion
-
-        private int normalize(int i, int against = 56, int @base = 0)
-        {
-            while (true)
-            {
-                if (i < (against + @base)) return i;
-
-                if (i >= (against + @base))
-                {
-                    var t = i - against;
-                    if (t < (against + @base)) return t;
-                    i = t;
-                    continue;
-                }
-
-                break;
-            }
-
-            throw new ArgumentOutOfRangeException("i", i, "should be > " + @base);
-        }
-
 
     }
 }
