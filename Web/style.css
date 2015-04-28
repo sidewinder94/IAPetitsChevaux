@@ -102,8 +102,10 @@
 /* Game structures */
 
 .playerhouse {
+    padding-top: 75px;
     height: 170px;
     width: 100%;
+    text-align: center;
 }
 
 .player1 {

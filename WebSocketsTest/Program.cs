@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.ServiceModel.WebSockets;
-using Newtonsoft.Json;
 
 namespace WebSocketsTest
 {
@@ -13,7 +8,7 @@ namespace WebSocketsTest
         static void Main(string[] args)
         {
             var host = new WebSocketHost<SimpleEventingService>(new Uri("ws://localhost:10000/"));
-            var endpoint = host.AddWebSocketEndpoint();
+            host.AddWebSocketEndpoint();
 
             host.Open();
 

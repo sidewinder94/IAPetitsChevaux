@@ -25,7 +25,11 @@ namespace WebSocketsTest
                     {String.Format("e-{0}-{1}", 1, normalize(i, 6, 1)), 0},
                     {String.Format("e-{0}-{1}", 2, normalize(i, 6, 1)), 0},
                     {String.Format("e-{0}-{1}", 3, normalize(i, 6, 1)), 0},
-                    {String.Format("e-{0}-{1}", 4, normalize(i, 6, 1)), 0}
+                    {String.Format("e-{0}-{1}", 4, normalize(i, 6, 1)), 0},
+                    {String.Format("sq-{0}", 1), normalize(i, 4, 1)},
+                    {String.Format("sq-{0}", 2), normalize(i, 4, 1)},
+                    {String.Format("sq-{0}", 3), normalize(i, 4, 1)},
+                    {String.Format("sq-{0}", 4), normalize(i, 4, 1)}
                 };
                 Send(JsonConvert.SerializeObject(dic));
                 i++;

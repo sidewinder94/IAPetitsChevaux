@@ -44,6 +44,10 @@ function updateGraphics(data) {
             }
             $("#e-" + i + "-" + j).html(content);
         }
+
+        if (data["sq-" + i] != undefined) {
+            $("#sq-" + i).html(data["sq-" + i]);
+        }
     }
 
 }

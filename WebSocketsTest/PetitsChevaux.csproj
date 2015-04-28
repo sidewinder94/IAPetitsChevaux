@@ -7,8 +7,8 @@
     <ProjectGuid>{13184940-A188-4194-BFE3-0905B5A4A2CB}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WebSocketsTest</RootNamespace>
-    <AssemblyName>WebSocketsTest</AssemblyName>
+    <RootNamespace>PetitsChevaux</RootNamespace>
+    <AssemblyName>PetitsChevaux</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -54,6 +54,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\Game.cs" />
+    <Compile Include="Game\Pawn.cs" />
+    <Compile Include="Game\Player.cs" />
+    <Compile Include="Game\Case.cs" />
+    <Compile Include="Game\CaseType.cs" />
+    <Compile Include="Plans\IPlan.cs" />
+    <Compile Include="Plans\MiniMax.cs" />
+    <Compile Include="Plans\Random.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleEventingService.cs" />
