@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace PetitsChevaux.Game
 {
-    public class Player
+    public class Player : ICloneable
     {
         private static int _nextId = 0;
 
@@ -27,6 +27,10 @@ namespace PetitsChevaux.Game
             get { return Id * 14; }
         }
 
+        private Player(int id)
+        {
+            this.Id = id;
+        }
 
         public Player()
         {
@@ -49,7 +53,17 @@ namespace PetitsChevaux.Game
             NextMove(this);
         }
 
+        public int Evaluate()
+        {
+            int result = 0;
+            Pawns.ForEach(p =>
+            {
+                //Si sur les cases de fin ajouter 56  la position, puisqu'on reprends de 1
+                result += (p.Type == CaseType.EndGame) ? p.Position + 56 : p.Position;
+            });
 
+            return result;
+        }
 
         #region Overrides of Object
 
@@ -64,33 +78,22 @@ namespace PetitsChevaux.Game
             return String.Format("Player {0}", Id + 1);
         }
 
+        /// <summary>
+        /// Crée un objet qui est une copie de l'instance actuelle.
+        /// </summary>
+        /// <returns>
+        /// Nouvel objet qui est une copie de cette instance.
+        /// </returns>
+        public object Clone()
+        {
+            var result = new Player(this.Id);
+            List<Pawn> clones = new List<Pawn>();
+            this.Pawns.ForEach(p => result.Pawns.Add((Pawn)p.Clone()));
+            return result;
+
+        }
+
         #endregion
 
-        public void MovePawn(Pawn pawn, int roll)
-        {
-            var newPosition = Board.Normalize(pawn.Position + roll);
-
-            Board.Players.ForEach(player =>
-            {
-
-                var count = player.Pawns.Count(p => p.Position == pawn.Position && p.Type == pawn.Type);
-                //Si un pion d'un autre joueur est sur la case de destination, il est renvoyé au "Box"
-                if (count == 1)
-                {
-                    var removed = player.Pawns.First(p => p.Position == pawn.Position && p.Type == pawn.Type);
-                    removed.Position = 0;
-                    removed.Type = CaseType.Square;
-                }
-
-                //Si 2 pions du même joueur sur la même case, on ne peut atterrir dessus... on annule donc le déplacement
-                if (count == 2)
-                {
-                    newPosition = pawn.Position;
-                }
-
-            });
-
-            pawn.Position = newPosition;
-        }
     }
 }

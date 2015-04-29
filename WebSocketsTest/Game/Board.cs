@@ -1,17 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using PetitsChevaux.Plans;
+using PetitsChevaux.Plans.MiniMax;
 using Random = System.Random;
 
 namespace PetitsChevaux.Game
 {
-    public class Board
+    public static class Board
     {
+        [UsedImplicitly]
         public static int PawnsPerPlayer = 4;
+
+        [UsedImplicitly]
+        public static int PlayerNumber = 4;
 
         private static readonly Random RandomGenerator = new Random();
 
         public static readonly List<Player> Players = new List<Player>();
+
+        private static int _lastPlayer = 0;
+
+        public static int NextPlayer
+        {
+            get { return Normalize((_lastPlayer), 4); }
+        }
 
         public static int RollDice()
         {
@@ -20,13 +33,18 @@ namespace PetitsChevaux.Game
 
         public static void GeneratePlayers()
         {
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < PlayerNumber; i++)
             {
                 Players.Add(new Player()
                 {
                     NextMove = ((i == 0) ? (Action<Player>)MiniMax.NextMove : Plans.SimpleMinded.NextMove)
                 });
             }
+        }
+
+        public static void NextTurn()
+        {
+            Players[Normalize(_lastPlayer++, 4)].Play();
         }
 
         public static int Normalize(int i, int against = 56, int @base = 0)

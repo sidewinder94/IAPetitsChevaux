@@ -15,6 +15,41 @@ namespace PetitsChevaux.Game
             _value = value;
         }
 
+        #region Equality members
+
+        private bool Equals(CaseType other)
+        {
+            return string.Equals(_value, other._value);
+        }
+
+        /// <summary>
+        /// Détermine si l'objet <see cref="T:System.Object"/> spécifié est égal à l'objet <see cref="T:System.Object"/> actuel.
+        /// </summary>
+        /// <returns>
+        /// true si l'objet spécifié est égal à l'objet actuel ; sinon, false.
+        /// </returns>
+        /// <param name="obj">Objet à comparer avec l'objet actif.</param>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((CaseType)obj);
+        }
+
+        /// <summary>
+        /// Sert de fonction de hachage pour un type particulier.
+        /// </summary>
+        /// <returns>
+        /// Code de hachage du <see cref="T:System.Object"/> actuel.
+        /// </returns>
+        public override int GetHashCode()
+        {
+            return (_value != null ? _value.GetHashCode() : 0);
+        }
+
+        #endregion
+
         #region Overrides of Object
 
         /// <summary>

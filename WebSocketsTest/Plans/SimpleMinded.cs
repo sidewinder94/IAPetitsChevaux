@@ -39,7 +39,7 @@ namespace PetitsChevaux.Plans
             //Si pas 6 ou que la case de départ est occupée, on avance le premier pion disponible
             else if (!player.Pawns.All(p => p.Type == CaseType.Square || p.Type == CaseType.EndGame))
             {
-                player.MovePawn(player.Pawns.First(), roll);
+                player.Pawns.First().Move(roll);
             }
             //Si aucun des chemins ci-dessus n'a pu être utilisé, on passe son tour
         }
