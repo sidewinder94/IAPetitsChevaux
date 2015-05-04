@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Microsoft.ServiceModel.WebSockets;
 using PetitsChevaux.Game;
 
@@ -8,6 +9,8 @@ namespace PetitsChevaux
     {
         static void Main(string[] args)
         {
+
+
             Board.PlayerNumber = 2;
             Board.PawnsPerPlayer = 4;
             Board.GeneratePlayers();

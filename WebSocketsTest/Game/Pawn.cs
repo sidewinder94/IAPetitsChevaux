@@ -27,12 +27,12 @@ namespace PetitsChevaux.Game
             board.ForEach(player =>
             {
 
-                var count = player.Pawns.Count(p => p.Position == this.Position &&
+                var count = player.Pawns.Count(p => p.Position == newPosition &&
                     p.Type == this.Type);
                 //Si un pion d'un autre joueur est sur la case de destination, il est renvoyé au "Box"
                 if (count == 1)
                 {
-                    var removed = player.Pawns.First(p => p.Position == this.Position &&
+                    var removed = player.Pawns.First(p => p.Position == newPosition &&
                         p.Type == this.Type);
                     removed.Position = 0;
                     removed.Type = CaseType.Square;
@@ -48,6 +48,34 @@ namespace PetitsChevaux.Game
 
             this.Position = newPosition;
         }
+
+        #region Overrides of Object
+
+        /// <summary>
+        /// Retourne une chaîne qui représente l'objet actuel.
+        /// </summary>
+        /// <returns>
+        /// Chaîne qui représente l'objet en cours.
+        /// </returns>
+        public override string ToString()
+        {
+            if (Type == CaseType.Classic)
+            {
+                return String.Format(CaseType.Classic.ToString(), Position);
+            }
+            else if (Type == CaseType.EndGame)
+            {
+
+                return String.Format(CaseType.EndGame.ToString(), "{0}", Position);
+
+            }
+            else
+            {
+                return String.Format(CaseType.Square.ToString(), "{0}");
+            }
+        }
+
+        #endregion
 
         #region Implementation of ICloneable
 

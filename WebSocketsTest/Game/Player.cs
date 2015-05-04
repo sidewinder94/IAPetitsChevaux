@@ -20,7 +20,7 @@ namespace PetitsChevaux.Game
 
         public readonly List<Pawn> Pawns = new List<Pawn>();
 
-        public Action<Player> NextMove { private get; set; }
+        public Func<Player, int> NextMove { private get; set; }
 
         public int StartCase
         {
@@ -39,18 +39,16 @@ namespace PetitsChevaux.Game
             {
                 Pawns.Add(new Pawn
                 {
-
                     Type = CaseType.Square,
                     Position = 0
-
                 });
             }
         }
 
-        public void Play()
+        public int Play()
         {
             if (NextMove == null) throw new ArgumentException("No Method to determine " + this + " next move");
-            NextMove(this);
+            return NextMove(this);
         }
 
         public int Evaluate()
@@ -58,6 +56,8 @@ namespace PetitsChevaux.Game
             int result = 0;
             Pawns.ForEach(p =>
             {
+                if (p.Type != CaseType.Square) result += 10;
+
                 //Si sur les cases de fin ajouter 56  la position, puisqu'on reprends de 1
                 result += (p.Type == CaseType.EndGame) ? p.Position + 56 : p.Position;
             });
@@ -87,7 +87,6 @@ namespace PetitsChevaux.Game
         public object Clone()
         {
             var result = new Player(this.Id);
-            List<Pawn> clones = new List<Pawn>();
             this.Pawns.ForEach(p => result.Pawns.Add((Pawn)p.Clone()));
             return result;
 

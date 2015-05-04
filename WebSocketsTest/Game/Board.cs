@@ -37,14 +37,46 @@ namespace PetitsChevaux.Game
             {
                 Players.Add(new Player()
                 {
-                    NextMove = ((i == 0) ? (Action<Player>)MiniMax.NextMove : Plans.SimpleMinded.NextMove)
+                    NextMove = ((i == 0) ? (Func<Player, int>)MiniMax.NextMove : SimpleMinded.NextMove)
                 });
             }
         }
 
-        public static void NextTurn()
+        public static Dictionary<String, int> NextTurn()
         {
-            Players[Normalize(_lastPlayer++, 4)].Play();
+            int player = Normalize(_lastPlayer++, Board.PlayerNumber);
+            int roll = Players[player].Play();
+
+            var result = new Dictionary<String, int>();
+            Players.ForEach(p =>
+            {
+                var squareCounter = 0;
+                p.Pawns.ForEach(pawn =>
+                {
+                    if (pawn.Type == CaseType.Classic)
+                    {
+                        if (!result.ContainsKey(String.Format(CaseType.Classic.ToString(), pawn.Position)))
+                        {
+                            result.Add(String.Format(CaseType.Classic.ToString(), pawn.Position), p.Id + 1);
+                        }
+                    }
+                    else if (pawn.Type == CaseType.EndGame)
+                    {
+                        if (!result.ContainsKey(String.Format(CaseType.EndGame.ToString(), p.Id + 1, pawn.Position)))
+                        {
+                            result.Add(String.Format(CaseType.EndGame.ToString(), p.Id + 1, pawn.Position), 0);
+                        }
+                    }
+                    else if (pawn.Type == CaseType.Square)
+                    {
+                        squareCounter++;
+                    }
+                });
+                result.Add(String.Format(CaseType.Square.ToString(), p.Id + 1), squareCounter);
+            });
+            result.Add("Player rolling : ", player);
+            result.Add("rolled", roll);
+            return result;
         }
 
         public static int Normalize(int i, int against = 56, int @base = 0)

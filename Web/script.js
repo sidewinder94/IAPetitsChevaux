@@ -36,6 +36,7 @@ function updateGraphics(data) {
         }
     }
 
+    //For Endgame & starting positions
     for (i = 1; i < 5; i++) {
         for (var j = 1; j < 7; j++) {
             var content = '<div class="number">' + j + '</div>';

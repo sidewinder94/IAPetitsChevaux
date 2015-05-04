@@ -7,7 +7,7 @@ namespace PetitsChevaux.Plans
     public static class SimpleMinded
     {
 
-        public static void NextMove(Player player)
+        public static int NextMove(Player player)
         {
             int roll = Board.RollDice();
             //Si on peut faire avancer un pion sur les cases de fin
@@ -42,6 +42,7 @@ namespace PetitsChevaux.Plans
                 player.Pawns.First().Move(roll);
             }
             //Si aucun des chemins ci-dessus n'a pu être utilisé, on passe son tour
+            return roll;
         }
 
     }

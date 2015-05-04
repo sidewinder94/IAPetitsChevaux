@@ -8,7 +8,7 @@ namespace PetitsChevaux.Plans.MiniMax
     public static class MiniMax
     {
 
-        private static int Algorithm(Node node, int depth, Boolean maximizingPlayer)
+        private static int Algorithm(Node node, int depth, Boolean maximizingPlayer, int playerId = 0)
         {
             int bestValue;
             if (depth == 0 || node.Any(p => p.Won))
@@ -18,39 +18,70 @@ namespace PetitsChevaux.Plans.MiniMax
 
             if (maximizingPlayer)
             {
-                int val = 0;
                 bestValue = int.MinValue;
-                foreach (var child in node)
+                int[] rolls = new int[6];
+
+                //Handling chance nodes
+                for (var roll = 1; roll < 7; roll++)
                 {
-                    val = Algorithm(child, depth - 1, false);
-                    bestValue = (bestValue > val) ? bestValue : val;
+                    var rollValue = 0;
+                    foreach (var child in node.GetNextNodes(roll, Board.Normalize(playerId, Board.PlayerNumber)))
+                    {
+                        rollValue += Algorithm(child, depth - 1, false, ++playerId);
+                    }
+                    rolls[roll - 1] = rollValue;
                 }
+
+                var val = (int)rolls.Average(r => r);
+
+                bestValue = Math.Max(bestValue, val);
 
                 return bestValue;
             }
             else
             {
                 bestValue = int.MaxValue;
-                int val = 0;
-                foreach (var child in node)
+
+                int[] rolls = new int[6];
+
+                //Handling chance nodes
+                for (var roll = 1; roll < 7; roll++)
                 {
-                    val = Algorithm(child, depth - 1, true);
-                    bestValue = (bestValue > val) ? val : bestValue;
+                    var rollValue = 0;
+                    foreach (var child in node.GetNextNodes(roll, Board.Normalize(playerId, Board.PlayerNumber)))
+                    {
+                        rollValue += Algorithm(child, depth - 1, false, ++playerId);
+                    }
+                    rolls[roll - 1] = rollValue;
                 }
+
+                int val = (int)rolls.Average(r => r);
+
+                bestValue = Math.Min(bestValue, val);
                 return bestValue;
             }
 
         }
 
 
-        public static void NextMove(Player player)
+        public static int NextMove(Player player)
         {
-            throw new System.NotImplementedException();
+            Node currentState = new Node { State = Board.Players };
+            int bestResult = Algorithm(currentState, 4, true);
+            int roll = Board.RollDice();
+            var nextNodes = currentState.GetNextNodes(roll, player.Id);
+            if (nextNodes.Count() != 0)
+            {
+                var nextNode = nextNodes.FirstOrDefault(n => Evaluate(n) == bestResult);
+                player.Pawns.Clear();
+                player.Pawns.AddRange(nextNode.State.First(p => p.Id == player.Id).Pawns);
+            }
+            return roll;
         }
 
-        private static int Evaluate(List<Player> state)
+        private static int Evaluate(Node state)
         {
-            throw new NotImplementedException();
+            return state.State[0].Evaluate();
         }
 
     }

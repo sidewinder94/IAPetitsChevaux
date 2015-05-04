@@ -37,6 +37,7 @@ namespace PetitsChevaux.Game
             return Equals((CaseType)obj);
         }
 
+
         /// <summary>
         /// Sert de fonction de hachage pour un type particulier.
         /// </summary>
