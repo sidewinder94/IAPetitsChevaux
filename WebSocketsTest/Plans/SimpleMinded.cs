@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using PetitsChevaux.Game;
 
 namespace PetitsChevaux.Plans
@@ -36,10 +35,10 @@ namespace PetitsChevaux.Plans
                 pawn.Position = player.StartCase;
                 pawn.Type = CaseType.Classic;
             }
-            //Si pas 6 ou que la case de départ est occupée, on avance le premier pion disponible
+            //Si pas 6 ou que la case de départ est occupée, on avance le premier pion disponible qui n'attends pas pour la fin de jeu
             else if (!player.Pawns.All(p => p.Type == CaseType.Square || p.Type == CaseType.EndGame))
             {
-                player.Pawns.First().Move(roll);
+                player.Pawns.First(p => p.Type == CaseType.Classic && p.Position != Board.Normalize(player.StartCase - 1)).Move(roll);
             }
             //Si aucun des chemins ci-dessus n'a pu être utilisé, on passe son tour
             return roll;

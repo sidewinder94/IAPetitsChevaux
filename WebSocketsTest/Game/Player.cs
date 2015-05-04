@@ -53,6 +53,7 @@ namespace PetitsChevaux.Game
 
         public int Evaluate()
         {
+            //TODO : Prepare a more precise version
             int result = 0;
             Pawns.ForEach(p =>
             {

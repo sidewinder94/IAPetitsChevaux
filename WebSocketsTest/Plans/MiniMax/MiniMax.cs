@@ -7,81 +7,68 @@ namespace PetitsChevaux.Plans.MiniMax
 {
     public static class MiniMax
     {
-
-        private static int Algorithm(Node node, int depth, Boolean maximizingPlayer, int playerId = 0)
+        private static Node DecisionMiniMax(Node state, int depth, int currentPlayerId)
         {
-            int bestValue;
-            if (depth == 0 || node.Any(p => p.Won))
-            {
-                return Evaluate(node);
-            }
+            var actions = state.GetNextNodes(Board.Normalize(currentPlayerId, Board.PlayerNumber))
+                .Select(st => new Tuple<Node, int>(st, ValeurMin(st, depth - 1, Board.Normalize(currentPlayerId, Board.PlayerNumber))))
+                .ToList();
 
-            if (maximizingPlayer)
-            {
-                bestValue = int.MinValue;
-                int[] rolls = new int[6];
-
-                //Handling chance nodes
-                for (var roll = 1; roll < 7; roll++)
-                {
-                    var rollValue = 0;
-                    foreach (var child in node.GetNextNodes(roll, Board.Normalize(playerId, Board.PlayerNumber)))
-                    {
-                        rollValue += Algorithm(child, depth - 1, false, ++playerId);
-                    }
-                    rolls[roll - 1] = rollValue;
-                }
-
-                var val = (int)rolls.Average(r => r);
-
-                bestValue = Math.Max(bestValue, val);
-
-                return bestValue;
-            }
-            else
-            {
-                bestValue = int.MaxValue;
-
-                int[] rolls = new int[6];
-
-                //Handling chance nodes
-                for (var roll = 1; roll < 7; roll++)
-                {
-                    var rollValue = 0;
-                    foreach (var child in node.GetNextNodes(roll, Board.Normalize(playerId, Board.PlayerNumber)))
-                    {
-                        rollValue += Algorithm(child, depth - 1, false, ++playerId);
-                    }
-                    rolls[roll - 1] = rollValue;
-                }
-
-                int val = (int)rolls.Average(r => r);
-
-                bestValue = Math.Min(bestValue, val);
-                return bestValue;
-            }
-
+            return actions.First(a => a.Item2 == actions.Min(m => m.Item2)).Item1;
         }
 
+        private static int ValeurMax(Node state, int depth, int currentPlayerId)
+        {
+            if (depth == 0 || state.Any(p => p.Won))
+            {
+                return Utility(state, currentPlayerId);
+            }
+            int[] rolls = new int[6];
+            for (var roll = 1; roll < 7; roll++)
+            {
+                state.Roll = roll;
+                rolls[roll - 1] =
+                    state.GetNextNodes(Board.Normalize(currentPlayerId, Board.PlayerNumber))
+                        .Max(a => ValeurMin(a, depth - 1, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber)));
+
+            }
+
+            return Math.Max(int.MinValue, (int)Math.Round(rolls.Average()));
+        }
+
+        private static int ValeurMin(Node state, int depth, int currentPlayerId)
+        {
+            if (depth == 0 || state.Any(p => p.Won))
+            {
+                return Utility(state, currentPlayerId);
+            }
+
+            int[] rolls = new int[6];
+            for (var roll = 1; roll < 7; roll++)
+            {
+                state.Roll = roll;
+                rolls[roll - 1] =
+                    state.GetNextNodes(Board.Normalize(currentPlayerId, Board.PlayerNumber))
+                        .Min(a => ValeurMin(a, depth - 1, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber)));
+
+            }
+
+            return Math.Min(int.MaxValue, (int)Math.Round(rolls.Average()));
+        }
+
+
+        private static int Utility(Node state, int evaluatedPlayer)
+        {
+            return state.State[Board.Normalize(evaluatedPlayer, Board.PlayerNumber)].Evaluate();
+        }
 
         public static int NextMove(Player player)
         {
-            Node currentState = new Node { State = Board.Players };
-            int bestResult = Algorithm(currentState, 4, true);
             int roll = Board.RollDice();
-            var nextNodes = currentState.GetNextNodes(roll, player.Id);
-            if (nextNodes.Count() != 0)
-            {
-                var nextNode = nextNodes.FirstOrDefault(n => Evaluate(n) == bestResult);
-                player.Pawns.Clear();
-                player.Pawns.AddRange(nextNode.State.First(p => p.Id == player.Id).Pawns);
-            }
+            Node currentState = new Node { State = Board.Players, Roll = roll };
+            var nextState = DecisionMiniMax(currentState, 20, player.Id);
+            player.Pawns.Clear();
+            player.Pawns.AddRange(nextState.State.First(p => p.Id == player.Id).Pawns);
             return roll;
-        }
-
-        private static int Evaluate(Node state)
-        {
-            return state.State[0].Evaluate();
         }
 
     }

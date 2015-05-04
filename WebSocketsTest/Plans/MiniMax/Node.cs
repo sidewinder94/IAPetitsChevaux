@@ -10,7 +10,7 @@ namespace PetitsChevaux.Plans.MiniMax
     class Node
     {
         public List<Player> State;
-
+        public int Roll;
 
 
         private List<Player> CloneState()
@@ -21,7 +21,7 @@ namespace PetitsChevaux.Plans.MiniMax
 
 
 
-        public IEnumerable<Node> GetNextNodes(int roll, int playerId = -1)
+        public IEnumerable<Node> GetNextNodes(int playerId = -1)
         {
             if (playerId == -1) playerId = Board.NextPlayer;
 
@@ -30,14 +30,14 @@ namespace PetitsChevaux.Plans.MiniMax
                 if (p.Type.Equals(CaseType.Classic))
                 {
                     var newState = CloneState();
-                    newState.First(player => player.Id == playerId).Pawns.First(pa => pa.Equals(p)).Move(roll, newState);
+                    newState.First(player => player.Id == playerId).Pawns.First(pa => pa.Equals(p)).Move(Roll, newState);
                     yield return new Node { State = newState };
                 }
 
                 if (p.Type.Equals(CaseType.Classic) &&
                     p.Position ==
                     (Board.Normalize(State.First(player => player.Id == playerId).StartCase - 1))
-                    && roll == 1)
+                    && Roll == 1)
                 {
                     var newState = CloneState();
                     var paw =
@@ -49,7 +49,7 @@ namespace PetitsChevaux.Plans.MiniMax
 
                 }
 
-                if (p.Type.Equals(CaseType.EndGame) && (roll == p.Position + 1))
+                if (p.Type.Equals(CaseType.EndGame) && (Roll == p.Position + 1))
                 {
                     var newState = CloneState();
                     newState
@@ -59,7 +59,7 @@ namespace PetitsChevaux.Plans.MiniMax
                     yield return new Node { State = newState };
                 }
 
-                if (p.Type.Equals(CaseType.Square) && roll == 6)
+                if (p.Type.Equals(CaseType.Square) && Roll == 6)
                 {
                     var newState = CloneState();
                     var cPLayer = newState.First(player => player.Id == playerId);
@@ -70,13 +70,9 @@ namespace PetitsChevaux.Plans.MiniMax
 
                     yield return new Node { State = newState };
                 }
+
+                yield return new Node { State = CloneState() };
             }
-        }
-
-
-        public int Value(Player player)
-        {
-            return State.First(p => p.Id == player.Id).Evaluate();
         }
 
         public Boolean Any(Func<Player, Boolean> predicate)
