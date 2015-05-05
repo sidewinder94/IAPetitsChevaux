@@ -9,7 +9,7 @@ namespace PetitsChevaux.Plans
         public static int NextMove(Player player)
         {
             int roll = Board.RollDice();
-            return roll;
+            //return roll;
             //Si on peut faire avancer un pion sur les cases de fin
             if (player.Pawns.Any(p => p.Type == CaseType.EndGame && (roll - p.Position) == 1) &&
                 !player.Pawns.Any(t => t.Type == CaseType.EndGame && t.Position == roll))

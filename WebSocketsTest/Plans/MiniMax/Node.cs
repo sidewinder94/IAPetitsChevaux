@@ -87,7 +87,7 @@ namespace PetitsChevaux.Plans.MiniMax
 
         public int Evaluate(Player player)
         {
-            var enScore = State.Where(pl => pl.Id != player.Id).Sum(p => p.Evaluate);
+            var enScore = State.Where(pl => pl.Id != /*player.Id*/0).Sum(p => p.Evaluate);
             return player.Evaluate - enScore;
         }
 

@@ -12,7 +12,7 @@ namespace PetitsChevaux.Plans.MiniMax
                 .Select(st => new Tuple<Node, int>(st, ValeurMin(st, depth - 1, Board.Normalize(currentPlayerId, Board.PlayerNumber))))
                 .ToList();
 
-            return actions.First(a => a.Item2 == actions.Min(m => m.Item2)).Item1;
+            return actions.First(a => a.Item2 == actions.Max(m => m.Item2)).Item1;
         }
 
         private static int ValeurMax(Node state, int depth, int currentPlayerId)

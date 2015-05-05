@@ -56,7 +56,7 @@ namespace PetitsChevaux.Game
                 int result = 0;
                 Pawns.ForEach(p =>
                 {
-                    if (p.Type != CaseType.Square) result += 10;
+                    if (p.Type != CaseType.Square) result += 56;
 
                     //Si sur les cases de fin ajouter 56 à la position, puisqu'on reprends de 1 et qu'on considère ce mouvement comme plus important
                     if (p.Type == CaseType.EndGame) result += p.Position * 10 + 56;
