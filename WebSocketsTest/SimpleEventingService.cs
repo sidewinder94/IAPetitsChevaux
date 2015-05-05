@@ -11,13 +11,13 @@ namespace PetitsChevaux
     public class SimpleEventingService : WebSocketService
     {
 
-        public static Boolean run = true;
+        public static Boolean Run = true;
         #region Overrides of WebSocketService
 
         public override void OnOpen()
         {
-            int i = 0;
-            while (run)
+            Run = true;
+            while (Run)
             {
                 ;
 
@@ -42,23 +42,23 @@ namespace PetitsChevaux
 
                 if (Board.Players.Any(p => p.Won))
                 {
-                    run = false;
+                    Run = false;
                     Console.WriteLine("{0} won !", Board.Players.First(p => p.Won));
                 }
 
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(100);
             }
         }
 
 
         protected override void OnClose()
         {
-            run = false;
+            Run = false;
         }
 
         protected override void OnError()
         {
-            run = false;
+            Run = false;
         }
 
         #endregion

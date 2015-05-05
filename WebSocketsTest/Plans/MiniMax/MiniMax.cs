@@ -58,14 +58,14 @@ namespace PetitsChevaux.Plans.MiniMax
 
         private static int Utility(Node state, int evaluatedPlayer)
         {
-            return state.State[Board.Normalize(evaluatedPlayer, Board.PlayerNumber)].Evaluate();
+            return state.Evaluate(state.State[Board.Normalize(evaluatedPlayer, Board.PlayerNumber)]);
         }
 
         public static int NextMove(Player player)
         {
             int roll = Board.RollDice();
             Node currentState = new Node { State = Board.Players, Roll = roll };
-            var nextState = DecisionMiniMax(currentState, 20, player.Id);
+            var nextState = DecisionMiniMax(currentState, 4, player.Id);
             player.Pawns.Clear();
             player.Pawns.AddRange(nextState.State.First(p => p.Id == player.Id).Pawns);
             return roll;

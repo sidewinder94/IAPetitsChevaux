@@ -7,9 +7,13 @@ namespace PetitsChevaux.Game
     public class Pawn : ICloneable
     {
         public CaseType Type;
-        public int Position;
+        private int _position;
 
-
+        public int Position
+        {
+            get { return _position; }
+            set { _position = Board.Normalize(value); }
+        }
 
         public static void Move(Pawn pawn, int roll, List<Player> board = null)
         {
@@ -22,6 +26,8 @@ namespace PetitsChevaux.Game
         {
             board = board ?? Board.Players;
 
+            Player owner = board.Find(p => p.Pawns.Contains(this));
+
             var newPosition = Board.Normalize(this.Position + roll);
 
             board.ForEach(player =>
@@ -30,7 +36,7 @@ namespace PetitsChevaux.Game
                 var count = player.Pawns.Count(p => p.Position == newPosition &&
                     p.Type == this.Type);
                 //Si un pion d'un autre joueur est sur la case de destination, il est renvoyé au "Box"
-                if (count == 1)
+                if (count == 1 && player != owner)
                 {
                     var removed = player.Pawns.First(p => p.Position == newPosition &&
                         p.Type == this.Type);

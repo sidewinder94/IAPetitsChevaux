@@ -21,7 +21,6 @@ namespace PetitsChevaux
 
             Console.WriteLine("Server initialized");
             Console.ReadLine();
-            host.Close();
         }
     }
 }

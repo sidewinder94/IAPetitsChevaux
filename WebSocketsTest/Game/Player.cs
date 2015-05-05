@@ -35,6 +35,7 @@ namespace PetitsChevaux.Game
         public Player()
         {
             this.Id = _nextId++;
+            if (Id > 3) throw new InvalidOperationException("There can only be 4 players at most in a game");
             for (int i = 0; i < Board.PawnsPerPlayer; i++)
             {
                 Pawns.Add(new Pawn
@@ -53,14 +54,14 @@ namespace PetitsChevaux.Game
 
         public int Evaluate()
         {
-            //TODO : Prepare a more precise version
             int result = 0;
             Pawns.ForEach(p =>
             {
                 if (p.Type != CaseType.Square) result += 10;
 
-                //Si sur les cases de fin ajouter 56  la position, puisqu'on reprends de 1
-                result += (p.Type == CaseType.EndGame) ? p.Position + 56 : p.Position;
+                //Si sur les cases de fin multiplier par 56 la position, puisqu'on reprends de 1 et qu'on considère ce mouvement comme plus important
+                result += (p.Type == CaseType.EndGame) ? p.Position * 56 : p.Position;
+                if (Won) result += 1000;
             });
 
             return result;

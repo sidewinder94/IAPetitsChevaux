@@ -19,8 +19,6 @@ namespace PetitsChevaux.Plans.MiniMax
         }
 
 
-
-
         public IEnumerable<Node> GetNextNodes(int playerId = -1)
         {
             if (playerId == -1) playerId = Board.NextPlayer;
@@ -63,6 +61,16 @@ namespace PetitsChevaux.Plans.MiniMax
                 {
                     var newState = CloneState();
                     var cPLayer = newState.First(player => player.Id == playerId);
+                    var ennemies = newState.Where(e => e != cPLayer);
+
+                    foreach (var pawn in
+                        from e in ennemies
+                        where e.Pawns.Any(pa => pa.Position == cPLayer.StartCase && pa.Type == CaseType.Classic)
+                        select e.Pawns.First(pa => pa.Position == cPLayer.StartCase && pa.Type == CaseType.Classic))
+                    {
+                        pawn.Type = CaseType.Square;
+                        pawn.Position = 0;
+                    }
                     var paw =
                         cPLayer.Pawns.First(pa => pa.Equals(p));
                     paw.Position = cPLayer.StartCase;
@@ -74,6 +82,13 @@ namespace PetitsChevaux.Plans.MiniMax
                 yield return new Node { State = CloneState() };
             }
         }
+
+        public int Evaluate(Player player)
+        {
+            var enScore = State.Where(pl => pl != player).Sum(p => p.Evaluate());
+            return player.Evaluate() - enScore;
+        }
+
 
         public Boolean Any(Func<Player, Boolean> predicate)
         {
