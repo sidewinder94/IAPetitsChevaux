@@ -22,13 +22,14 @@ namespace PetitsChevaux.Plans.MiniMax
         public IEnumerable<Node> GetNextNodes(int playerId = -1)
         {
             if (playerId == -1) playerId = Board.NextPlayer;
-
+            bool moved = false;
             foreach (var p in State.First(player => player.Id == playerId).Pawns)
             {
                 if (p.Type.Equals(CaseType.Classic))
                 {
                     var newState = CloneState();
                     newState.First(player => player.Id == playerId).Pawns.First(pa => pa.Equals(p)).Move(Roll, newState);
+                    moved = true;
                     yield return new Node { State = newState };
                 }
 
@@ -40,9 +41,8 @@ namespace PetitsChevaux.Plans.MiniMax
                     var newState = CloneState();
                     var paw =
                         newState.First(player => player.Id == playerId).Pawns.First(pa => pa.Equals(p));
-                    paw.Position = 1;
-                    paw.Type = CaseType.EndGame;
-
+                    paw.MoveTo(CaseType.EndGame, 1, newState);
+                    moved = true;
                     yield return new Node { State = newState };
 
                 }
@@ -53,7 +53,8 @@ namespace PetitsChevaux.Plans.MiniMax
                     newState
                         .First(player => player.Id == playerId)
                         .Pawns.First(pa => pa.Equals(p))
-                        .Position++;
+                        .MoveTo(CaseType.EndGame, Roll, newState);
+                    moved = true;
                     yield return new Node { State = newState };
                 }
 
@@ -68,31 +69,33 @@ namespace PetitsChevaux.Plans.MiniMax
                         where e.Pawns.Any(pa => pa.Position == cPLayer.StartCase && pa.Type == CaseType.Classic)
                         select e.Pawns.First(pa => pa.Position == cPLayer.StartCase && pa.Type == CaseType.Classic))
                     {
-                        pawn.Type = CaseType.Square;
-                        pawn.Position = 0;
+                        pawn.MoveTo(CaseType.Square, 0, newState);
                     }
                     var paw =
                         cPLayer.Pawns.First(pa => pa.Equals(p));
-                    paw.Position = cPLayer.StartCase;
-                    paw.Type = CaseType.Classic;
 
+                    paw.MoveTo(CaseType.Classic, cPLayer.StartCase, newState);
+                    moved = true;
                     yield return new Node { State = newState };
                 }
-
+            }
+            if (!moved)
+            {
                 yield return new Node { State = CloneState() };
             }
         }
 
         public int Evaluate(Player player)
         {
-            var enScore = State.Where(pl => pl != player).Sum(p => p.Evaluate());
-            return player.Evaluate() - enScore;
+            var enScore = State.Where(pl => pl.Id != player.Id).Sum(p => p.Evaluate);
+            return player.Evaluate - enScore;
         }
 
 
         public Boolean Any(Func<Player, Boolean> predicate)
         {
-            return State.Any(predicate);
+            var temp = State.Any(predicate);
+            return temp;
         }
 
     }

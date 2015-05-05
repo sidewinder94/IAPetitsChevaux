@@ -16,6 +16,7 @@ namespace PetitsChevaux
 
         public override void OnOpen()
         {
+            int i = 100;
             Run = true;
             while (Run)
             {
@@ -46,7 +47,7 @@ namespace PetitsChevaux
                     Console.WriteLine("{0} won !", Board.Players.First(p => p.Won));
                 }
 
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(i);
             }
         }
 

@@ -14,7 +14,8 @@ namespace PetitsChevaux.Game
         {
             get
             {
-                return Pawns.Any(p => p.Type == CaseType.EndGame && p.Position == 6);
+                var temp = Pawns.Any(p => p.Type == CaseType.EndGame && p.Position == 6);
+                return temp;
             }
         }
 
@@ -36,13 +37,9 @@ namespace PetitsChevaux.Game
         {
             this.Id = _nextId++;
             if (Id > 3) throw new InvalidOperationException("There can only be 4 players at most in a game");
-            for (int i = 0; i < Board.PawnsPerPlayer; i++)
+            for (var i = 0; i < Board.PawnsPerPlayer; i++)
             {
-                Pawns.Add(new Pawn
-                {
-                    Type = CaseType.Square,
-                    Position = 0
-                });
+                Pawns.Add(new Pawn().MoveTo(CaseType.Square, 0));
             }
         }
 
@@ -52,19 +49,23 @@ namespace PetitsChevaux.Game
             return NextMove(this);
         }
 
-        public int Evaluate()
+        public int Evaluate
         {
-            int result = 0;
-            Pawns.ForEach(p =>
+            get
             {
-                if (p.Type != CaseType.Square) result += 10;
+                int result = 0;
+                Pawns.ForEach(p =>
+                {
+                    if (p.Type != CaseType.Square) result += 10;
 
-                //Si sur les cases de fin multiplier par 56 la position, puisqu'on reprends de 1 et qu'on considère ce mouvement comme plus important
-                result += (p.Type == CaseType.EndGame) ? p.Position * 56 : p.Position;
-                if (Won) result += 1000;
-            });
+                    //Si sur les cases de fin ajouter 56 à la position, puisqu'on reprends de 1 et qu'on considère ce mouvement comme plus important
+                    if (p.Type == CaseType.EndGame) result += p.Position * 10 + 56;
+                    if (p.Type == CaseType.Classic) result += (p.Position - StartCase);
+                    if (Won) result += 1000;
+                });
 
-            return result;
+                return result;
+            }
         }
 
         #region Overrides of Object

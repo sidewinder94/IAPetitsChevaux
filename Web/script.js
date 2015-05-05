@@ -4,7 +4,7 @@ function connectToHost() {
     var connection = new WebSocket(host);
 
     connection.onopen = function () {
-        alert("Connected");
+        //alert("Connected");
         $("#startButton").hide();
     };
 
