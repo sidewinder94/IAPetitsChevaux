@@ -33,6 +33,8 @@ namespace PetitsChevaux.Game
 
         public static void GeneratePlayers()
         {
+            Player.Reset();
+            Players.Clear();
             for (var i = 0; i < PlayerNumber; i++)
             {
                 Players.Add(new Player()

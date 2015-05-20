@@ -45,9 +45,9 @@ namespace PetitsChevaux.Plans
                 }
             }
             //Si pas 6 ou que la case de départ est occupée, on avance le premier pion disponible qui n'attends pas pour la fin de jeu
-            else if (!player.Pawns.All(p => (p.Type == CaseType.Square || p.Type == CaseType.EndGame) || p.Position != Board.Normalize(player.StartCase - 1)))
+            else if (player.Pawns.Any(p => (p.Type == CaseType.Classic) && (p.Position != (Board.Normalize(player.StartCase - 1)))))
             {
-                player.Pawns.First(p => p.Type == CaseType.Classic && p.Position != Board.Normalize(player.StartCase - 1)).Move(roll);
+                player.Pawns.First(p => (p.Type == CaseType.Classic) && (p.Position != (Board.Normalize(player.StartCase - 1)))).Move(roll);
             }
             //Dans le cas ou on ne peut rien bouger d'autre que le pion attendant pour rentrer
             else if (!player.Pawns.All(p => p.Type == CaseType.Square || p.Type == CaseType.EndGame))
