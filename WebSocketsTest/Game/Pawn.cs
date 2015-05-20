@@ -35,28 +35,32 @@ namespace PetitsChevaux.Game
             var newPosition = Board.Normalize(position);
             var newType = type;
 
-            board.ForEach(player =>
+
+
+            if (this.Type != CaseType.EndGame)
             {
-
-                var count = player.Pawns.Count(p => p.Position == newPosition &&
-                    p.Type == type);
-                //Si un pion d'un autre joueur est sur la case de destination, il est renvoyé au "Box"
-                if (count == 1 && player != owner)
+                board.ForEach(player =>
                 {
-                    var removed = player.Pawns.First(p => p.Position == newPosition &&
-                        p.Type == type);
-                    removed.Position = 0;
-                    removed.Type = CaseType.Square;
-                }
+                    var count = player.Pawns.Count(p => p.Position == newPosition &&
+                                                        p.Type == type);
+                    //Si un pion d'un autre joueur est sur la case de destination, il est renvoyé au "Box"
+                    if (count == 1 && player != owner)
+                    {
+                        var removed = player.Pawns.First(p => p.Position == newPosition &&
+                                                              p.Type == type);
+                        removed.Position = 0;
+                        removed.Type = CaseType.Square;
+                    }
 
-                //Si 2 pions du même joueur sur la même case, on ne peut atterrir dessus... on annule donc le déplacement
-                if (count == 2)
-                {
-                    newType = this.Type;
-                    newPosition = this.Position;
-                }
+                    //Si 2 pions du même joueur sur la même case, on ne peut atterrir dessus... on annule donc le déplacement
+                    if (count == 2)
+                    {
+                        newType = this.Type;
+                        newPosition = this.Position;
+                    }
 
-            });
+                });
+            }
 
             this.Position = newPosition;
             this.Type = newType;

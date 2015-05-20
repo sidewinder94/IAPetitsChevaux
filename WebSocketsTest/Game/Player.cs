@@ -66,7 +66,7 @@ namespace PetitsChevaux.Game
 
                     //Si sur les cases de fin ajouter 56 à la position, puisqu'on reprends de 1 et qu'on considère ce mouvement comme plus important
                     if (p.Type == CaseType.EndGame) result += p.Position * 10 + 56;
-                    if (p.Type == CaseType.Classic) result += (p.Position - StartCase);
+                    if (p.Type == CaseType.Classic) result += Board.Normalize(p.Position - StartCase);
                     if (Won) result += 1000;
                 });
 

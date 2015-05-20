@@ -93,8 +93,6 @@ namespace PetitsChevaux.Game
                     continue;
                 }
 
-                if (i < (against + @base)) return i;
-
                 if (i >= (against + @base))
                 {
                     var t = i - against;
@@ -102,6 +100,8 @@ namespace PetitsChevaux.Game
                     i = t;
                     continue;
                 }
+
+                if (i < (against + @base)) return i;
 
                 break;
             }

@@ -7,7 +7,7 @@ using PetitsChevaux.Game;
 
 namespace PetitsChevaux.Plans.MiniMax
 {
-    class Node
+    public class Node
     {
         public List<Player> State;
         public int Roll;
@@ -87,7 +87,7 @@ namespace PetitsChevaux.Plans.MiniMax
 
         public int Evaluate(Player player)
         {
-            var enScore = State.Where(pl => pl.Id != /*player.Id*/0).Sum(p => p.Evaluate);
+            var enScore = State.First(p => p.Id == Board.Normalize(player.Id + 1, Board.PlayerNumber)).Evaluate;
             return player.Evaluate - enScore;
         }
 
@@ -97,6 +97,7 @@ namespace PetitsChevaux.Plans.MiniMax
             var temp = State.Any(predicate);
             return temp;
         }
+
 
     }
 }
