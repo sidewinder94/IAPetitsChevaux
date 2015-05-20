@@ -26,6 +26,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Web", "http://localhost:502
 		SlnRelativePath = "Web\"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsPetitsChevaux", "TestsPetitsChevaux\TestsPetitsChevaux.csproj", "{90CE7A48-B2CB-427A-8597-CDA379FD9F36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{F5F1FE51-90E4-46B5-95A2-801FB5B9C759}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5F1FE51-90E4-46B5-95A2-801FB5B9C759}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{F5F1FE51-90E4-46B5-95A2-801FB5B9C759}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{90CE7A48-B2CB-427A-8597-CDA379FD9F36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90CE7A48-B2CB-427A-8597-CDA379FD9F36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90CE7A48-B2CB-427A-8597-CDA379FD9F36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90CE7A48-B2CB-427A-8597-CDA379FD9F36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
