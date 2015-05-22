@@ -26,7 +26,7 @@ namespace TestsPetitsChevaux
 
             Board.Players.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 19);
 
-            var currentState = new Node { State = Board.Players, Roll = 1 };
+            var currentState = new Node { State = Board.Players, Roll = 2 };
 
             Node nextState = MiniMax.DecisionMiniMax(currentState, 3, 0);
 

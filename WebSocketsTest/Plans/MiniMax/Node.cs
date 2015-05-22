@@ -62,15 +62,7 @@ namespace PetitsChevaux.Plans.MiniMax
                 {
                     var newState = CloneState();
                     var cPLayer = newState.First(player => player.Id == playerId);
-                    var ennemies = newState.Where(e => e != cPLayer);
 
-                    foreach (var pawn in
-                        from e in ennemies
-                        where e.Pawns.Any(pa => pa.Position == cPLayer.StartCase && pa.Type == CaseType.Classic)
-                        select e.Pawns.First(pa => pa.Position == cPLayer.StartCase && pa.Type == CaseType.Classic))
-                    {
-                        pawn.MoveTo(CaseType.Square, 0, newState);
-                    }
                     var paw =
                         cPLayer.Pawns.First(pa => pa.Equals(p));
 

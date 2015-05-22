@@ -9,6 +9,16 @@ namespace PetitsChevaux.Game
         public CaseType Type { get; private set; }
         private int _position;
 
+        public CaseType OldType { get; private set; }
+        private int _oldPosition;
+
+        public int OldPosition
+        {
+            get { return _oldPosition; }
+            private set { _oldPosition = Board.Normalize(value); }
+        }
+
+
         public int Position
         {
             get { return _position; }
@@ -37,7 +47,7 @@ namespace PetitsChevaux.Game
 
 
 
-            if (this.Type != CaseType.EndGame)
+            if (type == CaseType.Classic)
             {
                 board.ForEach(player =>
                 {
@@ -48,8 +58,7 @@ namespace PetitsChevaux.Game
                     {
                         var removed = player.Pawns.First(p => p.Position == newPosition &&
                                                               p.Type == type);
-                        removed.Position = 0;
-                        removed.Type = CaseType.Square;
+                        removed.MoveTo(CaseType.Square, 0);
                     }
 
                     //Si 2 pions du même joueur sur la même case, on ne peut atterrir dessus... on annule donc le déplacement
@@ -61,6 +70,9 @@ namespace PetitsChevaux.Game
 
                 });
             }
+
+            this.OldPosition = this.Position;
+            this.OldType = this.Type;
 
             this.Position = newPosition;
             this.Type = newType;
@@ -103,8 +115,17 @@ namespace PetitsChevaux.Game
 
             });
 
+            this.OldPosition = this.Position;
+
             this.Position = newPosition;
         }
+
+        public Pawn()
+        {
+            OldType = CaseType.Square;
+            OldPosition = 0;
+        }
+
 
         #region Overrides of Object
 
@@ -147,7 +168,9 @@ namespace PetitsChevaux.Game
             return new Pawn()
             {
                 Type = this.Type,
-                Position = this.Position
+                Position = this.Position,
+                OldPosition = this.OldPosition,
+                OldType = this.OldType
             };
         }
         #endregion

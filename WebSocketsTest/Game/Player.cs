@@ -60,15 +60,18 @@ namespace PetitsChevaux.Game
             get
             {
                 int result = 0;
+
                 Pawns.ForEach(p =>
                 {
-                    if (p.Type != CaseType.Square) result += 56;
+                    if (p.OldType == CaseType.Square && p.Type == CaseType.Classic && p.Position == 0) result +=
+                     (int)Math.Pow(56, 3);
 
                     //Si sur les cases de fin ajouter 56 à la position, puisqu'on reprends de 1 et qu'on considère ce mouvement comme plus important
-                    if (p.Type == CaseType.EndGame) result += p.Position * 10 + 56;
-                    if (p.Type == CaseType.Classic) result += Board.Normalize(p.Position - StartCase);
-                    if (Won) result += 1000;
+                    if (p.Type == CaseType.EndGame) result += (int)Math.Pow(p.Position * 10 + 56, 2);
+                    if (p.Type == CaseType.Classic) result += (int)Math.Pow(Board.Normalize(p.Position - StartCase), 2);
                 });
+
+                if (Won) result = int.MaxValue;
 
                 return result;
             }
