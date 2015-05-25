@@ -38,11 +38,10 @@ namespace PetitsChevaux.Game
 
         public void GeneratePlayers()
         {
-            Player.Reset();
             Players.Clear();
             for (var i = 0; i < PlayerNumber; i++)
             {
-                Players.Add(new Player()
+                Players.Add(new Player(i)
                 {
                     NextMove = ((i == 0) ? (Func<Player, List<Player>, int>)MiniMax.NextMove : SimpleMinded.NextMove)
                 });

@@ -7,14 +7,7 @@ namespace PetitsChevaux.Game
 {
     public class Player : ICloneable
     {
-        private static int _nextId = 0;
-
         public readonly int Id;
-
-        public static void Reset()
-        {
-            _nextId = 0;
-        }
 
         public Boolean Won
         {
@@ -39,10 +32,13 @@ namespace PetitsChevaux.Game
             this.Id = id;
         }
 
-        public Player()
+        public Player(int id, bool clone = false)
+            : this(id)
         {
-            this.Id = _nextId++;
             if (Id > 3) throw new InvalidOperationException("There can only be 4 players at most in a game");
+
+            if (clone) return;
+
             for (var i = 0; i < Board.PawnsPerPlayer; i++)
             {
                 Pawns.Add(new Pawn(CaseType.Square, 0));
