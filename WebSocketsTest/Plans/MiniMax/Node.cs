@@ -19,6 +19,22 @@ namespace PetitsChevaux.Plans.MiniMax
         }
 
 
+        private Node RefreshPawns(Pawn moved = null)
+        {
+            State.ForEach(p => p.Pawns.ForEach(pa =>
+            {
+                if (moved == null)
+                {
+                    pa.NoMove();
+                    return;
+                }
+
+                if (pa != moved) pa.NoMove();
+            }));
+
+            return this;
+        }
+
         public IEnumerable<Node> GetNextNodes(int playerId = -1)
         {
             if (playerId == -1) playerId = Board.NextPlayer;
@@ -28,9 +44,9 @@ namespace PetitsChevaux.Plans.MiniMax
                 if (p.Type.Equals(CaseType.Classic))
                 {
                     var newState = CloneState();
-                    newState.First(player => player.Id == playerId).Pawns.First(pa => pa.Equals(p)).Move(Roll, newState);
+                    var movedPawn = newState.First(player => player.Id == playerId).Pawns.First(pa => pa.Equals(p)).Move(Roll, newState);
                     moved = true;
-                    yield return new Node { State = newState };
+                    yield return new Node { State = newState }.RefreshPawns(movedPawn);
                 }
 
                 if (p.Type.Equals(CaseType.Classic) &&
@@ -43,19 +59,19 @@ namespace PetitsChevaux.Plans.MiniMax
                         newState.First(player => player.Id == playerId).Pawns.First(pa => pa.Equals(p));
                     paw.MoveTo(CaseType.EndGame, 1, newState);
                     moved = true;
-                    yield return new Node { State = newState };
+                    yield return new Node { State = newState }.RefreshPawns(paw);
 
                 }
 
                 if (p.Type.Equals(CaseType.EndGame) && (Roll == p.Position + 1))
                 {
                     var newState = CloneState();
-                    newState
+                    var paw = newState
                         .First(player => player.Id == playerId)
                         .Pawns.First(pa => pa.Equals(p))
                         .MoveTo(CaseType.EndGame, Roll, newState);
                     moved = true;
-                    yield return new Node { State = newState };
+                    yield return new Node { State = newState }.RefreshPawns(paw);
                 }
 
                 if (p.Type.Equals(CaseType.Square) && Roll == 6)
@@ -68,12 +84,12 @@ namespace PetitsChevaux.Plans.MiniMax
 
                     paw.MoveTo(CaseType.Classic, cPLayer.StartCase, newState);
                     moved = true;
-                    yield return new Node { State = newState };
+                    yield return new Node { State = newState }.RefreshPawns(paw);
                 }
             }
             if (!moved)
             {
-                yield return new Node { State = CloneState() };
+                yield return new Node { State = CloneState() }.RefreshPawns();
             }
         }
 

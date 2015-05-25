@@ -11,8 +11,6 @@ namespace PetitsChevaux.Plans.MiniMax
     public static class MiniMax
     {
 
-
-
         private static bool _run = true;
 
         public static Node DecisionMiniMax(Node state, int depth, int currentPlayerId)
@@ -51,7 +49,7 @@ namespace PetitsChevaux.Plans.MiniMax
             {
                 int u = Utility(state, currentPlayerId);
                 Debug.Print(u.ToString());
-                return u;
+                return currentPlayerId != 0 ? -u : u;
             }
 
             int[] rolls = new int[6];
@@ -106,7 +104,6 @@ namespace PetitsChevaux.Plans.MiniMax
 
                 depth++;
             }
-
 
             Board.Players.ForEach(p => p.Pawns.Clear());
             Board.Players.ForEach(p => p.Pawns.AddRange(nextState.State.First(pl => pl.Id == p.Id).Pawns));

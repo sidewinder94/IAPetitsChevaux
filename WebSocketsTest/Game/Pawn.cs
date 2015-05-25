@@ -30,6 +30,13 @@ namespace PetitsChevaux.Game
             pawn.Move(roll, board);
         }
 
+        public Pawn NoMove()
+        {
+            OldPosition = Position;
+            OldType = Type;
+            return this;
+        }
+
 
         public Pawn MoveTo(CaseType type, int position, List<Player> board = null)
         {
@@ -80,7 +87,7 @@ namespace PetitsChevaux.Game
         }
 
 
-        public void Move(int roll, List<Player> board = null)
+        public Pawn Move(int roll, List<Player> board = null)
         {
             if (board == null) board = Board.Players;
 
@@ -118,6 +125,8 @@ namespace PetitsChevaux.Game
             this.OldPosition = this.Position;
 
             this.Position = newPosition;
+
+            return this;
         }
 
         public Pawn()
