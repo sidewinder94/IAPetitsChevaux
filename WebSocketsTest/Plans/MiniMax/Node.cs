@@ -37,7 +37,7 @@ namespace PetitsChevaux.Plans.MiniMax
 
         public IEnumerable<Node> GetNextNodes(int playerId = -1)
         {
-            if (playerId == -1) playerId = Board.NextPlayer;
+            if (playerId == -1) throw new ArgumentException("PLayer ID Invalid", "playerId");
             bool moved = false;
             foreach (var p in State.First(player => player.Id == playerId).Pawns)
             {

@@ -18,8 +18,9 @@ namespace TestsPetitsChevaux
         {
             Board.PawnsPerPlayer = 4;
             Board.PlayerNumber = 2;
-            Board.GeneratePlayers();
-            _startNode = new Node { State = Board.Players };
+            Board board = new Board();
+
+            _startNode = new Node { State = board.Players };
         }
 
         [TestCleanup]
@@ -63,11 +64,11 @@ namespace TestsPetitsChevaux
         {
             var player = _startNode.State.First(pl => pl.Id == 0);
 
-            player.Pawns[0].MoveTo(CaseType.Classic, 13);
-            player.Pawns[1].MoveTo(CaseType.Classic, 27);
-            player.Pawns[2].MoveTo(CaseType.Classic, 41);
+            player.Pawns[0].MoveTo(CaseType.Classic, 13, _startNode.State);
+            player.Pawns[1].MoveTo(CaseType.Classic, 27, _startNode.State);
+            player.Pawns[2].MoveTo(CaseType.Classic, 41, _startNode.State);
 
-            _startNode.State.First(pl => pl.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 51);
+            _startNode.State.First(pl => pl.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 51, _startNode.State);
 
             _startNode.Roll = 6;
 

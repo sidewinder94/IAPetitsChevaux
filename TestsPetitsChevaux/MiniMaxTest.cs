@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,23 +11,34 @@ namespace TestsPetitsChevaux
     [TestClass]
     public class MiniMaxTest
     {
+        private List<Player> _board = null;
+
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            Board.PawnsPerPlayer = 4;
+            Board.PlayerNumber = 2;
+            Board board = new Board();
+            _board = board.Players;
+
+        }
+
         //Player 0 rolled 1
         //{"c-53":1,"c-49":1,"c-32":1,"c-0":1,"sq-1":0,"c-19":2,"sq-2":3,"Player rolling : ":1,"rolled":5}
         [TestMethod]
         public void TestDecisionMiniMax()
         {
-            Board.PawnsPerPlayer = 4;
-            Board.PlayerNumber = 2;
-            Board.GeneratePlayers();
 
-            Board.Players.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.Classic, 53).MoveTo(CaseType.Classic, 53);
-            Board.Players.First(p => p.Id == 0).Pawns[1].MoveTo(CaseType.Classic, 49).MoveTo(CaseType.Classic, 49);
-            Board.Players.First(p => p.Id == 0).Pawns[2].MoveTo(CaseType.Classic, 32).MoveTo(CaseType.Classic, 32);
-            Board.Players.First(p => p.Id == 0).Pawns[3].MoveTo(CaseType.Classic, 0);
 
-            Board.Players.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 19);
+            _board.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.Classic, 53, _board).MoveTo(CaseType.Classic, 53, _board);
+            _board.First(p => p.Id == 0).Pawns[1].MoveTo(CaseType.Classic, 49, _board).MoveTo(CaseType.Classic, 49, _board);
+            _board.First(p => p.Id == 0).Pawns[2].MoveTo(CaseType.Classic, 32, _board).MoveTo(CaseType.Classic, 32, _board);
+            _board.First(p => p.Id == 0).Pawns[3].MoveTo(CaseType.Classic, 0, _board);
 
-            var currentState = new Node { State = Board.Players, Roll = 2 };
+            _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 19, _board);
+
+            var currentState = new Node { State = _board, Roll = 2 };
 
             Node nextState = MiniMax.DecisionMiniMax(currentState, 3, 0);
 
@@ -39,18 +51,15 @@ namespace TestsPetitsChevaux
         [TestMethod]
         public void TestDecisionMiniMaxEndEntry()
         {
-            Board.PawnsPerPlayer = 4;
-            Board.PlayerNumber = 2;
-            Board.GeneratePlayers();
 
-            Board.Players.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.Classic, 54).MoveTo(CaseType.Classic, 55);
-            Board.Players.First(p => p.Id == 0).Pawns[1].MoveTo(CaseType.Classic, 48).MoveTo(CaseType.Classic, 49);
-            Board.Players.First(p => p.Id == 0).Pawns[2].MoveTo(CaseType.Classic, 31).MoveTo(CaseType.Classic, 32);
-            Board.Players.First(p => p.Id == 0).Pawns[3].MoveTo(CaseType.Classic, 0);
+            _board.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.Classic, 54, _board).MoveTo(CaseType.Classic, 55, _board);
+            _board.First(p => p.Id == 0).Pawns[1].MoveTo(CaseType.Classic, 48, _board).MoveTo(CaseType.Classic, 49, _board);
+            _board.First(p => p.Id == 0).Pawns[2].MoveTo(CaseType.Classic, 31, _board).MoveTo(CaseType.Classic, 32, _board);
+            _board.First(p => p.Id == 0).Pawns[3].MoveTo(CaseType.Classic, 0, _board);
 
-            Board.Players.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 19);
+            _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 19, _board);
 
-            var currentState = new Node { State = Board.Players, Roll = 1 };
+            var currentState = new Node { State = _board, Roll = 1 };
 
             Node nextState = MiniMax.DecisionMiniMax(currentState, 3, 0);
 
@@ -64,18 +73,15 @@ namespace TestsPetitsChevaux
         [TestMethod]
         public void TestDecisionMiniMaxEndGame()
         {
-            Board.PawnsPerPlayer = 4;
-            Board.PlayerNumber = 2;
-            Board.GeneratePlayers();
 
-            Board.Players.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.EndGame, 54).MoveTo(CaseType.Classic, 55);
-            Board.Players.First(p => p.Id == 0).Pawns[1].MoveTo(CaseType.EndGame, 4).MoveTo(CaseType.EndGame, 5);
-            Board.Players.First(p => p.Id == 0).Pawns[2].MoveTo(CaseType.Classic, 31).MoveTo(CaseType.Classic, 49);
-            Board.Players.First(p => p.Id == 0).Pawns[3].MoveTo(CaseType.Classic, 0);
+            _board.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.EndGame, 54, _board).MoveTo(CaseType.Classic, 55, _board);
+            _board.First(p => p.Id == 0).Pawns[1].MoveTo(CaseType.EndGame, 4, _board).MoveTo(CaseType.EndGame, 5, _board);
+            _board.First(p => p.Id == 0).Pawns[2].MoveTo(CaseType.Classic, 31, _board).MoveTo(CaseType.Classic, 49, _board);
+            _board.First(p => p.Id == 0).Pawns[3].MoveTo(CaseType.Classic, 0, _board);
 
-            Board.Players.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 19);
+            _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 19, _board);
 
-            var currentState = new Node { State = Board.Players, Roll = 6 };
+            var currentState = new Node { State = _board, Roll = 6 };
 
             Node nextState = MiniMax.DecisionMiniMax(currentState, 3, 0);
 
@@ -87,17 +93,14 @@ namespace TestsPetitsChevaux
         [TestMethod]
         public void TestDecisionMiniMaxEatThePawn()
         {
-            Board.PawnsPerPlayer = 4;
-            Board.PlayerNumber = 2;
-            Board.GeneratePlayers();
 
-            Board.Players.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.EndGame, 54).MoveTo(CaseType.Classic, 55);
-            Board.Players.First(p => p.Id == 0).Pawns[1].MoveTo(CaseType.Classic, 31).MoveTo(CaseType.Classic, 49);
+            _board.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.EndGame, 54, _board).MoveTo(CaseType.Classic, 55, _board);
+            _board.First(p => p.Id == 0).Pawns[1].MoveTo(CaseType.Classic, 31, _board).MoveTo(CaseType.Classic, 49, _board);
 
-            Board.Players.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 1).MoveTo(CaseType.Classic, 1);
-            Board.Players.First(p => p.Id == 1).Pawns[1].MoveTo(CaseType.Classic, 50).MoveTo(CaseType.Classic, 51);
+            _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 1, _board).MoveTo(CaseType.Classic, 1, _board);
+            _board.First(p => p.Id == 1).Pawns[1].MoveTo(CaseType.Classic, 50, _board).MoveTo(CaseType.Classic, 51, _board);
 
-            var currentState = new Node { State = Board.Players, Roll = 2 };
+            var currentState = new Node { State = _board, Roll = 2 };
 
             Node nextState = MiniMax.DecisionMiniMax(currentState, 3, 0);
 
@@ -113,17 +116,14 @@ namespace TestsPetitsChevaux
         [TestMethod]
         public void TestDecisionMiniMaxMoveFromBeginning()
         {
-            Board.PawnsPerPlayer = 4;
-            Board.PlayerNumber = 2;
-            Board.GeneratePlayers();
 
-            Board.Players.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.EndGame, 53).MoveTo(CaseType.Classic, 54);
-            Board.Players.First(p => p.Id == 0).Pawns[1].MoveTo(CaseType.Classic, 0);
+            _board.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.EndGame, 53, _board).MoveTo(CaseType.Classic, 54, _board);
+            _board.First(p => p.Id == 0).Pawns[1].MoveTo(CaseType.Classic, 0, _board);
 
-            Board.Players.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 14);
-            Board.Players.First(p => p.Id == 1).Pawns[1].MoveTo(CaseType.Classic, 12).MoveTo(CaseType.Classic, 13);
+            _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 14, _board);
+            _board.First(p => p.Id == 1).Pawns[1].MoveTo(CaseType.Classic, 12, _board).MoveTo(CaseType.Classic, 13, _board);
 
-            var currentState = new Node { State = Board.Players, Roll = 4 };
+            var currentState = new Node { State = _board, Roll = 4 };
 
             Node nextState = MiniMax.DecisionMiniMax(currentState, 3, 0);
 

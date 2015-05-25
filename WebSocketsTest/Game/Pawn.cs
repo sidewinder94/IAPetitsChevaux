@@ -30,6 +30,9 @@ namespace PetitsChevaux.Game
             pawn.Move(roll, board);
         }
 
+
+
+
         public Pawn NoMove()
         {
             OldPosition = Position;
@@ -38,9 +41,9 @@ namespace PetitsChevaux.Game
         }
 
 
-        public Pawn MoveTo(CaseType type, int position, List<Player> board = null)
+        public Pawn MoveTo(CaseType type, int position, List<Player> board)
         {
-            if (board == null) board = Board.Players;
+            if (board == null) throw new ArgumentException("Board should not be null", "board");
 
             if (type == CaseType.Square)
             {
@@ -65,7 +68,7 @@ namespace PetitsChevaux.Game
                     {
                         var removed = player.Pawns.First(p => p.Position == newPosition &&
                                                               p.Type == type);
-                        removed.MoveTo(CaseType.Square, 0);
+                        removed.MoveTo(CaseType.Square, 0, board);
                     }
 
                     //Si 2 pions du même joueur sur la même case, on ne peut atterrir dessus... on annule donc le déplacement
@@ -87,9 +90,9 @@ namespace PetitsChevaux.Game
         }
 
 
-        public Pawn Move(int roll, List<Player> board = null)
+        public Pawn Move(int roll, List<Player> board)
         {
-            if (board == null) board = Board.Players;
+            if (board == null) throw new ArgumentException("Null Board", "board");
 
             Player owner = board.Find(p => p.Pawns.Contains(this));
 
@@ -135,6 +138,12 @@ namespace PetitsChevaux.Game
             OldPosition = 0;
         }
 
+        public Pawn(CaseType type, int position)
+            : this()
+        {
+            Type = type;
+            Position = position;
+        }
 
         #region Overrides of Object
 

@@ -7,7 +7,7 @@ using Random = System.Random;
 
 namespace PetitsChevaux.Game
 {
-    public static class Board
+    public class Board
     {
         [UsedImplicitly]
         public static int PawnsPerPlayer = 4;
@@ -17,13 +17,18 @@ namespace PetitsChevaux.Game
 
         private static readonly Random RandomGenerator = new Random();
 
-        public static readonly List<Player> Players = new List<Player>();
+        public readonly List<Player> Players = new List<Player>();
 
-        private static int _lastPlayer = 0;
+        private int _lastPlayer = 0;
 
-        public static int NextPlayer
+        public int NextPlayer
         {
             get { return Normalize((_lastPlayer), 4); }
+        }
+
+        public Board()
+        {
+            GeneratePlayers();
         }
 
         public static int RollDice()
@@ -31,7 +36,7 @@ namespace PetitsChevaux.Game
             return RandomGenerator.Next(1, 7);
         }
 
-        public static void GeneratePlayers()
+        public void GeneratePlayers()
         {
             Player.Reset();
             Players.Clear();
@@ -39,15 +44,15 @@ namespace PetitsChevaux.Game
             {
                 Players.Add(new Player()
                 {
-                    NextMove = ((i == 0) ? (Func<Player, int>)MiniMax.NextMove : SimpleMinded.NextMove)
+                    NextMove = ((i == 0) ? (Func<Player, List<Player>, int>)MiniMax.NextMove : SimpleMinded.NextMove)
                 });
             }
         }
 
-        public static Dictionary<String, int> NextTurn()
+        public Dictionary<String, int> NextTurn()
         {
             int player = Normalize(_lastPlayer++, Board.PlayerNumber);
-            int roll = Players[player].Play();
+            int roll = Players[player].Play(Players);
 
             var result = new Dictionary<String, int>();
             Players.ForEach(p =>

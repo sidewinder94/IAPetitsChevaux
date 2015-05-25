@@ -12,7 +12,9 @@ namespace PetitsChevaux
 
             Board.PlayerNumber = 2;
             Board.PawnsPerPlayer = 4;
-            Board.GeneratePlayers();
+            Board board = new Board();
+
+            SimpleEventingService.board = board;
 
             var host = new WebSocketHost<SimpleEventingService>(new Uri("ws://localhost:10000/"));
             host.AddWebSocketEndpoint();

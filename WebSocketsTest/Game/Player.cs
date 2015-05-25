@@ -27,7 +27,7 @@ namespace PetitsChevaux.Game
 
         public readonly List<Pawn> Pawns = new List<Pawn>();
 
-        public Func<Player, int> NextMove { private get; set; }
+        public Func<Player, List<Player>, int> NextMove { private get; set; }
 
         public int StartCase
         {
@@ -45,14 +45,14 @@ namespace PetitsChevaux.Game
             if (Id > 3) throw new InvalidOperationException("There can only be 4 players at most in a game");
             for (var i = 0; i < Board.PawnsPerPlayer; i++)
             {
-                Pawns.Add(new Pawn().MoveTo(CaseType.Square, 0));
+                Pawns.Add(new Pawn(CaseType.Square, 0));
             }
         }
 
-        public int Play()
+        public int Play(List<Player> board)
         {
             if (NextMove == null) throw new ArgumentException("No Method to determine " + this + " next move");
-            return NextMove(this);
+            return NextMove(this, board);
         }
 
         public int Evaluate

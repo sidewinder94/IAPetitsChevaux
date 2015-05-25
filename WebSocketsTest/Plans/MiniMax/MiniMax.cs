@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
@@ -71,13 +72,13 @@ namespace PetitsChevaux.Plans.MiniMax
             return state.Evaluate(state.State[Board.Normalize(evaluatedPlayer, Board.PlayerNumber)]);
         }
 
-        public static int NextMove(Player player)
+        public static int NextMove(Player player, List<Player> board)
         {
             _run = true;
 
             int roll = Board.RollDice();
 
-            Node currentState = new Node { State = Board.Players, Roll = roll };
+            Node currentState = new Node { State = board, Roll = roll };
 
             int depth = 4;
 
@@ -105,8 +106,8 @@ namespace PetitsChevaux.Plans.MiniMax
                 depth++;
             }
 
-            Board.Players.ForEach(p => p.Pawns.Clear());
-            Board.Players.ForEach(p => p.Pawns.AddRange(nextState.State.First(pl => pl.Id == p.Id).Pawns));
+            board.ForEach(p => p.Pawns.Clear());
+            board.ForEach(p => p.Pawns.AddRange(nextState.State.First(pl => pl.Id == p.Id).Pawns));
             return roll;
         }
 
