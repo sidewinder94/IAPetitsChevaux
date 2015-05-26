@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Text.RegularExpressions;
-using Microsoft.ServiceModel.WebSockets;
+using System.IO;
+using System.Linq;
 using PetitsChevaux.Game;
 
 namespace PetitsChevaux
