@@ -16,10 +16,12 @@ namespace PetitsChevaux
             Board.PlayerNumber = 2;
             Board.PawnsPerPlayer = 4;
 
-            while (wins.Sum() < 100000)
+            Console.WriteLine("[Player 1 : {0}, Player 2 : {1}] = {2}", wins[0], wins[1], wins.Sum());
+            String results = null;
+            Enumerable.Range(0, 1000).AsParallel().ForAll(a =>
             {
-                Console.WriteLine("[Player 1 : {0}, Player 2 : {1}] = {2}", wins[0], wins[1], wins.Sum());
                 Boolean run = true;
+                Board board = new Board();
 
                 Board.PlayerNumber = 2;
                 Board.PawnsPerPlayer = 4;
@@ -32,13 +34,14 @@ namespace PetitsChevaux
                         run = false;
                         var winner = board.Players.First(p => p.Won);
                         wins[winner.Id]++;
+                        results = String.Format("[Player 1 : {0}, Player 2 : {1}] = {2}", wins[0], wins[1], wins.Sum());
+                        Console.WriteLine(results);
                     }
                 }
 
+            });
 
-            }
-            var results = String.Format("[Player 1 : {0}, Player 2 : {1}] = {2}", wins[0], wins[1], wins.Sum());
-            Console.WriteLine(results);
+
             using (var fs = File.AppendText("results.txt"))
             {
                 fs.Write(results + fs.NewLine);
