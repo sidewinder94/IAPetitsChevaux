@@ -12,11 +12,12 @@ namespace TestsPetitsChevaux
     public class MiniMaxTest
     {
         private List<Player> _board = null;
-
+        private MiniMax _minMax = null;
 
         [TestInitialize]
         public void Initialize()
         {
+            _minMax = new MiniMax();
             Board.PawnsPerPlayer = 4;
             Board.PlayerNumber = 2;
             Board board = new Board();
@@ -40,7 +41,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 2 };
 
-            Node nextState = MiniMax.DecisionMiniMax(currentState, 3, 0);
+            Node nextState = _minMax.DecisionMiniMax(currentState, 3, 0);
 
 
             var newPos = nextState.State.First(p => p.Id == 0).Pawns[0].Position;
@@ -61,7 +62,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 1 };
 
-            Node nextState = MiniMax.DecisionMiniMax(currentState, 3, 0);
+            Node nextState = _minMax.DecisionMiniMax(currentState, 3, 0);
 
 
             var newPos = nextState.State.First(p => p.Id == 0).Pawns[0];
@@ -83,7 +84,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 6 };
 
-            Node nextState = MiniMax.DecisionMiniMax(currentState, 3, 0);
+            Node nextState = _minMax.DecisionMiniMax(currentState, 3, 0);
 
             var newPos = nextState.State.First(p => p.Id == 0);
 
@@ -102,7 +103,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 2 };
 
-            Node nextState = MiniMax.DecisionMiniMax(currentState, 3, 0);
+            Node nextState = _minMax.DecisionMiniMax(currentState, 3, 0);
 
             var newPos = nextState.State.First(p => p.Id == 0).Pawns[1];
 
@@ -125,7 +126,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 4 };
 
-            Node nextState = MiniMax.DecisionMiniMax(currentState, 3, 0);
+            Node nextState = _minMax.DecisionMiniMax(currentState, 3, 0);
 
             var newPos = nextState.State.First(p => p.Id == 0).Pawns[0];
 

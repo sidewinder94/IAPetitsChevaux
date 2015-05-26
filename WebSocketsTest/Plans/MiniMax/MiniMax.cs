@@ -9,12 +9,12 @@ using PetitsChevaux.Game;
 
 namespace PetitsChevaux.Plans.MiniMax
 {
-    public static class MiniMax
+    public class MiniMax
     {
 
-        private static bool _run = true;
+        private bool _run = true;
 
-        public static Node DecisionMiniMax(Node state, int depth, int currentPlayerId)
+        public Node DecisionMiniMax(Node state, int depth, int currentPlayerId)
         {
             var actions = state.GetNextNodes(Board.Normalize(currentPlayerId, Board.PlayerNumber))
                 .Select(st => new Tuple<Node, int>(st, ValeurMin(st, depth, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber))))
@@ -23,7 +23,7 @@ namespace PetitsChevaux.Plans.MiniMax
             return actions.First(a => a.Item2 == actions.Max(m => m.Item2)).Item1;
         }
 
-        private static int ValeurMax(Node state, int depth, int currentPlayerId)
+        private int ValeurMax(Node state, int depth, int currentPlayerId)
         {
             if (!_run || (depth == 0 || state.Any(p => p.Won)))
             {
@@ -44,7 +44,7 @@ namespace PetitsChevaux.Plans.MiniMax
             return (int)Math.Round(rolls.Average());
         }
 
-        private static int ValeurMin(Node state, int depth, int currentPlayerId)
+        private int ValeurMin(Node state, int depth, int currentPlayerId)
         {
             if (!_run || (depth == 0 || state.Any(p => p.Won)))
             {
@@ -74,7 +74,7 @@ namespace PetitsChevaux.Plans.MiniMax
 
         public static int NextMove(Player player, List<Player> board)
         {
-            _run = true;
+            MiniMax minMax = new MiniMax();
 
             int roll = Board.RollDice();
 
@@ -88,17 +88,17 @@ namespace PetitsChevaux.Plans.MiniMax
                 AutoReset = false,
             };
 
-            timer.Elapsed += (sender, args) => _run = false;
+            timer.Elapsed += (sender, args) => minMax._run = false;
 
             timer.Start();
 
-            Node nextState = DecisionMiniMax(currentState, 3, player.Id);
+            Node nextState = minMax.DecisionMiniMax(currentState, 3, player.Id);
 
-            while (_run)
+            while (minMax._run)
             {
-                var st = DecisionMiniMax(currentState, depth, player.Id);
+                var st = minMax.DecisionMiniMax(currentState, depth, player.Id);
 
-                if (_run)
+                if (minMax._run)
                 {
                     nextState = st;
                 }
