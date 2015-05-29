@@ -73,6 +73,7 @@
     <Compile Include="Game\Pawn.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\CaseType.cs" />
+    <Compile Include="Plans\MiniMax\NegaMax.cs" />
     <Compile Include="Plans\MiniMax\Node.cs" />
     <Compile Include="Properties\JetBrainsAnnotations.cs" />
     <Compile Include="Plans\MiniMax\MiniMax.cs" />

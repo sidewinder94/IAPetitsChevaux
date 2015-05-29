@@ -74,7 +74,7 @@ namespace PetitsChevaux.Plans.MiniMax
 
         public static int NextMove(Player player, List<Player> board)
         {
-            MiniMax minMax = new MiniMax();
+            var minMax = new MiniMax();
 
             int roll = Board.RollDice();
 

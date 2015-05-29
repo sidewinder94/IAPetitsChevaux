@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="NegaMaxtest.cs" />
     <Compile Include="PlayerTest.cs" />
     <Compile Include="NodeTest.cs" />
     <Compile Include="MiniMaxTest.cs" />
