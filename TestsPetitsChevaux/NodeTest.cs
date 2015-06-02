@@ -35,16 +35,25 @@ namespace TestsPetitsChevaux
             _startNode.Roll = 1;
             var output = _startNode.GetNextNodes(0);
 
-            Assert.IsTrue(output.All(n => n.State.All(pl => pl.Pawns.All(p => p.Position == 0 && p.Type == CaseType.Square))),
-                "A Pawn got out with a roll of 1");
+            Assert.IsFalse(output.Any(n => n != null), "A Pawn got out with a roll of 1");
 
             _startNode.Roll = 6;
             output = _startNode.GetNextNodes(0);
 
 
-            foreach (var node in output)
+            foreach (var action in output)
             {
-                node.State.ForEach(pl =>
+                if (action != null)
+                {
+                    action.Item1.MoveTo(action.Item3, action.Item2, _startNode.State);
+                    _startNode.RefreshPawns(action.Item1);
+                }
+                else
+                {
+                    _startNode.RefreshPawns();
+                }
+
+                _startNode.State.ForEach(pl =>
                 {
                     var count = pl.Pawns.Count(pa => pa.Position == pl.StartCase && pa.Type == CaseType.Classic);
 
@@ -54,6 +63,8 @@ namespace TestsPetitsChevaux
 
                     if (pl.Id == 0 && count > 1) Assert.Fail("Player 1 got " + count + " pawns out in 1 turn");
                 });
+
+                _startNode.RollBack();
             }
 
         }
@@ -74,11 +85,29 @@ namespace TestsPetitsChevaux
 
             var output = _startNode.GetNextNodes(0);
 
-            var eval = output.Select(n => new Tuple<Node, int>(n, n.Evaluate(n.State.Find(p => p.Id == 0)))).ToList();
+            var eval = output.Select(n =>
+            {
+                if (n != null)
+                {
+                    n.Item1.MoveTo(n.Item3, n.Item2, _startNode.State);
+                    _startNode.RefreshPawns(n.Item1);
+                }
+                else
+                {
+                    _startNode.RefreshPawns();
+                }
 
-            Node best = eval.First(a => a.Item2 == eval.Max(m => m.Item2)).Item1;
+                var r = new Tuple<Tuple<Pawn, int, CaseType>, int>(n, _startNode.Evaluate(_startNode.State.Find(p => p.Id == 0)));
 
-            var testedPawn = best.State.First(pl => pl.Id == 0).Pawns[3];
+                _startNode.RollBack();
+
+                return r;
+            }).ToList();
+
+            var best = eval.First(a => a.Item2 == eval.Max(m => m.Item2)).Item1;
+            best.Item1.MoveTo(best.Item3, best.Item2, _startNode.State);
+
+            var testedPawn = _startNode.State.First(pl => pl.Id == 0).Pawns[3];
 
             Assert.IsTrue(testedPawn.Position == 0, "Pawn not in initial position");
             Assert.IsTrue(testedPawn.Type == CaseType.Classic, "Pawn did not get out");

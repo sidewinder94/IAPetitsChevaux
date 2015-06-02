@@ -41,7 +41,7 @@ namespace PetitsChevaux.Game
 
             for (var i = 0; i < Board.PawnsPerPlayer; i++)
             {
-                Pawns.Add(new Pawn(CaseType.Square, 0));
+                Pawns.Add(new Pawn(CaseType.Square, 0, i));
             }
         }
 

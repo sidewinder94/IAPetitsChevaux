@@ -41,12 +41,10 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 2 };
 
-            Node nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
+            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
 
 
-            var newPos = nextState.State.First(p => p.Id == 0).Pawns[0].Position;
-
-            Assert.IsTrue(newPos == 55, newPos.ToString());
+            Assert.IsTrue(nextState.Item2 == 55, nextState.ToString());
         }
 
         [TestMethod]
@@ -62,13 +60,12 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 1 };
 
-            Node nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
+            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
 
 
-            var newPos = nextState.State.First(p => p.Id == 0).Pawns[0];
 
-            Assert.IsTrue(newPos.Position == 1 && newPos.Type == CaseType.EndGame,
-                newPos.ToString());
+            Assert.IsTrue(nextState.Item2 == 1 && nextState.Item3 == CaseType.EndGame,
+                nextState.ToString());
         }
 
         [TestMethod]
@@ -84,9 +81,11 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 6 };
 
-            Node nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
+            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
 
-            var newPos = nextState.State.First(p => p.Id == 0);
+            nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, currentState.State);
+
+            var newPos = currentState.State.First(p => p.Id == 0);
 
             Assert.IsTrue(newPos.Won, newPos.ToString());
         }
@@ -103,13 +102,15 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 2 };
 
-            Node nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
+            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
 
-            var newPos = nextState.State.First(p => p.Id == 0).Pawns[1];
+            nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, currentState.State);
+
+            var newPos = currentState.State.First(p => p.Id == 0).Pawns[1];
 
             Assert.IsTrue(newPos.Position == 51 && newPos.Type == CaseType.Classic, newPos.ToString());
 
-            var type = nextState.State.First(pl => pl.Id == 1).Pawns[1].Type;
+            var type = currentState.State.First(pl => pl.Id == 1).Pawns[1].Type;
 
             Assert.IsTrue(type == CaseType.Square, type.ToString());
         }
@@ -126,13 +127,15 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 4 };
 
-            Node nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
+            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
 
-            var newPos = nextState.State.First(p => p.Id == 0).Pawns[0];
+            nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, currentState.State);
+
+            var newPos = currentState.State.First(p => p.Id == 0).Pawns[0];
 
             Assert.IsTrue(newPos.Position == 54 && newPos.Type == CaseType.Classic, newPos.ToString());
 
-            newPos = nextState.State.First(pl => pl.Id == 0).Pawns[1];
+            newPos = currentState.State.First(pl => pl.Id == 0).Pawns[1];
 
             Assert.IsTrue(newPos.Position == 4 && newPos.Type == CaseType.Classic, newPos.Position.ToString());
         }

@@ -6,16 +6,23 @@ namespace PetitsChevaux.Game
 {
     public class Pawn : ICloneable
     {
+
+        public readonly int Id;
+
         public CaseType Type { get; private set; }
         private int _position;
 
-        public CaseType OldType { get; private set; }
-        private int _oldPosition;
+
+        private Stack<Tuple<int, CaseType>> _old = new Stack<Tuple<int, CaseType>>();
+
+        public CaseType OldType
+        {
+            get { return _old.Peek().Item2; }
+        }
 
         public int OldPosition
         {
-            get { return _oldPosition; }
-            private set { _oldPosition = Board.Normalize(value); }
+            get { return _old.Peek().Item1; }
         }
 
 
@@ -31,12 +38,24 @@ namespace PetitsChevaux.Game
         }
 
 
-
+        public Pawn RollBack(int moves = 1)
+        {
+            while (moves > 0)
+            {
+                if (_old.Count > 1)
+                {
+                    var old = _old.Pop();
+                    Position = old.Item1;
+                    Type = old.Item2;
+                }
+                moves--;
+            }
+            return this;
+        }
 
         public Pawn NoMove()
         {
-            OldPosition = Position;
-            OldType = Type;
+            _old.Push(new Tuple<int, CaseType>(Position, Type));
             return this;
         }
 
@@ -81,8 +100,8 @@ namespace PetitsChevaux.Game
                 });
             }
 
-            this.OldPosition = this.Position;
-            this.OldType = this.Type;
+
+            _old.Push(new Tuple<int, CaseType>(Position, Type));
 
             this.Position = newPosition;
             this.Type = newType;
@@ -125,21 +144,22 @@ namespace PetitsChevaux.Game
 
             });
 
-            this.OldPosition = this.Position;
+            _old.Push(new Tuple<int, CaseType>(Position, OldType));
 
             this.Position = newPosition;
 
             return this;
         }
 
-        public Pawn()
+        public Pawn(int id)
         {
-            OldType = CaseType.Square;
-            OldPosition = 0;
+            Id = id;
+
+            _old.Push(new Tuple<int, CaseType>(0, CaseType.Square));
         }
 
-        public Pawn(CaseType type, int position)
-            : this()
+        public Pawn(CaseType type, int position, int id)
+            : this(id)
         {
             Type = type;
             Position = position;
@@ -183,13 +203,15 @@ namespace PetitsChevaux.Game
         /// </returns>
         public object Clone()
         {
-            return new Pawn()
+            var result = new Pawn(this.Id)
             {
                 Type = this.Type,
                 Position = this.Position,
-                OldPosition = this.OldPosition,
-                OldType = this.OldType
             };
+
+            result._old.Push(new Tuple<int, CaseType>(this.OldPosition, this.OldType));
+
+            return result;
         }
         #endregion
 

@@ -14,20 +14,32 @@ namespace PetitsChevaux.Plans.MiniMax
 
         private bool _run = true;
 
-        public Node DecisionMiniMax(Node state, int depth, int currentPlayerId)
+        public Tuple<Pawn, int, CaseType> DecisionMiniMax(Node state, int depth, int currentPlayerId)
         {
             var actions = state.GetNextNodes(Board.Normalize(currentPlayerId, Board.PlayerNumber))
-                .Select(st => new Tuple<Node, int>(st, ValeurMin(st, depth, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber))))
+                .Select(st => new Tuple<Tuple<Pawn, int, CaseType>, int>(st, ValeurMin(state, depth, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber), st)))
                 .ToList();
 
             return actions.First(a => a.Item2 == actions.Max(m => m.Item2)).Item1;
         }
 
-        private int ValeurMax(Node state, int depth, int currentPlayerId)
+        private int ValeurMax(Node state, int depth, int currentPlayerId, Tuple<Pawn, int, CaseType> action)
         {
+            if (action == null)
+            {
+                state.RefreshPawns();
+            }
+            else
+            {
+                action.Item1.MoveTo(action.Item3, action.Item2, state.State);
+                state.RefreshPawns(action.Item1);
+            }
+
             if (!_run || (depth == 0 || state.Any(p => p.Won)))
             {
                 int u = Utility(state, currentPlayerId);
+
+                state.RollBack();
 
                 return currentPlayerId != 0 ? -u : u;
             }
@@ -37,19 +49,33 @@ namespace PetitsChevaux.Plans.MiniMax
                 state.Roll = roll;
                 rolls[roll - 1] =
                     state.GetNextNodes(Board.Normalize(currentPlayerId, Board.PlayerNumber))
-                        .Max(a => ValeurMin(a, depth - 1, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber)));
+                        .Max(a => ValeurMin(state, depth - 1, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber), a));
 
             }
+
+            state.RollBack();
 
             return (int)Math.Round(rolls.Average());
         }
 
-        private int ValeurMin(Node state, int depth, int currentPlayerId)
+        private int ValeurMin(Node state, int depth, int currentPlayerId, Tuple<Pawn, int, CaseType> action)
         {
+            if (action == null)
+            {
+                state.RefreshPawns();
+            }
+            else
+            {
+                action.Item1.MoveTo(action.Item3, action.Item2, state.State);
+                state.RefreshPawns(action.Item1);
+            }
+
             if (!_run || (depth == 0 || state.Any(p => p.Won)))
             {
                 int u = Utility(state, currentPlayerId);
-                Debug.Print(u.ToString());
+
+                state.RollBack();
+
                 return currentPlayerId != 0 ? -u : u;
             }
 
@@ -59,9 +85,11 @@ namespace PetitsChevaux.Plans.MiniMax
                 state.Roll = roll;
                 rolls[roll - 1] =
                     state.GetNextNodes(Board.Normalize(currentPlayerId, Board.PlayerNumber))
-                        .Min(a => ValeurMax(a, depth - 1, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber)));
+                        .Min(a => ValeurMax(state, depth - 1, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber), a));
 
             }
+
+            state.RollBack();
 
             return (int)Math.Round(rolls.Average());
         }
@@ -92,7 +120,7 @@ namespace PetitsChevaux.Plans.MiniMax
 
             timer.Start();
 
-            Node nextState = minMax.DecisionMiniMax(currentState, 3, player.Id);
+            var nextState = minMax.DecisionMiniMax(currentState, 3, player.Id);
 
             while (minMax._run)
             {
@@ -106,8 +134,8 @@ namespace PetitsChevaux.Plans.MiniMax
                 depth++;
             }
 
-            board.ForEach(p => p.Pawns.Clear());
-            board.ForEach(p => p.Pawns.AddRange(nextState.State.First(pl => pl.Id == p.Id).Pawns));
+            nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, board);
+
             return roll;
         }
 
