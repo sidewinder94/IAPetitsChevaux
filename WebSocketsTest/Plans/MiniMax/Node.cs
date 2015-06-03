@@ -47,6 +47,8 @@ namespace PetitsChevaux.Plans.MiniMax
 
         public IEnumerable<Tuple<Pawn, int, CaseType>> GetNextNodes(int playerId = -1)
         {
+            int roll = Roll;
+
             if (playerId == -1) throw new ArgumentException("Player ID Invalid", "playerId");
             bool moved = false;
             foreach (var p in State.First(player => player.Id == playerId).Pawns)
@@ -54,26 +56,26 @@ namespace PetitsChevaux.Plans.MiniMax
                 if (p.Type.Equals(CaseType.Classic))
                 {
                     moved = true;
-                    yield return new Tuple<Pawn, int, CaseType>(p, Board.Normalize(p.Position + Roll), CaseType.Classic);
+                    yield return new Tuple<Pawn, int, CaseType>(p, Board.Normalize(p.Position + roll), CaseType.Classic);
                 }
 
                 if (p.Type.Equals(CaseType.Classic) &&
                     p.Position ==
                     (Board.Normalize(State.First(player => player.Id == playerId).StartCase - 1))
-                    && Roll == 1)
+                    && roll == 1)
                 {
                     moved = true;
                     yield return new Tuple<Pawn, int, CaseType>(p, 1, CaseType.EndGame);
 
                 }
 
-                if (p.Type.Equals(CaseType.EndGame) && (Roll == p.Position + 1))
+                if (p.Type.Equals(CaseType.EndGame) && (roll == p.Position + 1))
                 {
                     moved = true;
-                    yield return new Tuple<Pawn, int, CaseType>(p, Roll, CaseType.EndGame);
+                    yield return new Tuple<Pawn, int, CaseType>(p, roll, CaseType.EndGame);
                 }
 
-                if (p.Type.Equals(CaseType.Square) && Roll == 6)
+                if (p.Type.Equals(CaseType.Square) && roll == 6)
                 {
                     var cPLayer = State.First(player => player.Id == playerId);
                     moved = true;

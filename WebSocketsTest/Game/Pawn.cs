@@ -66,8 +66,10 @@ namespace PetitsChevaux.Game
 
             if (type == CaseType.Square)
             {
+                _old.Push(new Tuple<int, CaseType>(Position, Type));
                 Type = type;
                 Position = position;
+                return this;
             }
 
             Player owner = board.Find(p => p.Pawns.Contains(this));
@@ -113,40 +115,7 @@ namespace PetitsChevaux.Game
         {
             if (board == null) throw new ArgumentException("Null Board", "board");
 
-            Player owner = board.Find(p => p.Pawns.Contains(this));
-
-            var newPosition = Board.Normalize(this.Position + roll);
-
-            board.ForEach(player =>
-            {
-
-                var count = player.Pawns.Count(p => p.Position == newPosition &&
-                    p.Type == this.Type);
-                //Si un pion d'un autre joueur est sur la case de destination, il est renvoyé au "Box"
-                if (count == 1 && player != owner)
-                {
-                    var removed = player.Pawns.First(p => p.Position == newPosition &&
-                        p.Type == this.Type);
-                    removed.Position = 0;
-                    removed.Type = CaseType.Square;
-                }
-
-                if (count == 1 && player == owner && Type == CaseType.EndGame)
-                {
-                    newPosition = this.Position;
-                }
-
-                //Si 2 pions du même joueur sur la même case, on ne peut atterrir dessus... on annule donc le déplacement
-                if (count == 2)
-                {
-                    newPosition = this.Position;
-                }
-
-            });
-
-            _old.Push(new Tuple<int, CaseType>(Position, OldType));
-
-            this.Position = newPosition;
+            MoveTo(CaseType.Classic, Board.Normalize(this.Position + roll), board);
 
             return this;
         }

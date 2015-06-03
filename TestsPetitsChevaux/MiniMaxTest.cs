@@ -60,9 +60,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 1 };
 
-            var nextState = _minMax.DecisionMiniMax(currentState, 3, 0);
-
-
+            var nextState = _minMax.DecisionMiniMax(currentState, 0, 0);
 
             Assert.IsTrue(nextState.Item2 == 1 && nextState.Item3 == CaseType.EndGame,
                 nextState.ToString());
