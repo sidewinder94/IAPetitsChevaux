@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.ServiceModel.WebSockets;
 using Newtonsoft.Json;
+using PetitsChevaux.Contract;
 using PetitsChevaux.Game;
 
 
@@ -18,43 +19,30 @@ namespace PetitsChevaux
 
         public override void OnOpen()
         {
-            if (board.Players.Any(p => p.Won))
+            board.GeneratePlayers();
+        }
+
+
+        public override void OnMessage(string message)
+        {
+            try
             {
-                board.GeneratePlayers();
-            }
-
-            int i = 100;
-            Run = true;
-            while (Run)
-            {
-                ;
-
-
-                //var dic = new Dictionary<String, int>
-                //{
-
-                //    {String.Format("c-{0}", Board.Normalize(i)), 1},
-                //    {String.Format("c-{0}", Board.Normalize(i + 14)), 2},
-                //    {String.Format("c-{0}", Board.Normalize(i + 28)), 3},
-                //    {String.Format("c-{0}", Board.Normalize(i + 42)), 4},
-                //    {String.Format("e-{0}-{1}", 1, Board.Normalize(i, 6, 1)), 0},
-                //    {String.Format("e-{0}-{1}", 2, Board.Normalize(i, 6, 1)), 0},
-                //    {String.Format("e-{0}-{1}", 3, Board.Normalize(i, 6, 1)), 0},
-                //    {String.Format("e-{0}-{1}", 4, Board.Normalize(i, 6, 1)), 0},
-                //    {String.Format("sq-{0}", 1), Board.Normalize(i, 4, 1)},
-                //    {String.Format("sq-{0}", 2), Board.Normalize(i, 4, 1)},
-                //    {String.Format("sq-{0}", 3), Board.Normalize(i, 4, 1)},
-                //    {String.Format("sq-{0}", 4), Board.Normalize(i, 4, 1)}
-                //};
-                Send(JsonConvert.SerializeObject(board.NextTurn()));
-
-                if (board.Players.Any(p => p.Won))
+                var rec = JsonConvert.DeserializeObject<Received>(message);
+                if (board.PlayerId == -1) board.PlayerId = rec.PlayerIdIs;
+                Console.WriteLine("PLaying for player {0}, asked {1}", board.PlayerId, rec.PlayerIdIs);
+                Player player;
+                rec.Players.ForEach(pl =>
                 {
-                    Run = false;
-                    Console.WriteLine("{0} won !", board.Players.First(p => p.Won));
-                }
+                    player = board.Players.First(p => p.Id == pl.Id);
+                    player.Pawns.Clear();
+                    player.Pawns.AddRange(pl.Pawns);
 
-                System.Threading.Thread.Sleep(i);
+                });
+                Send(JsonConvert.SerializeObject(board.NextTurn(rec.Roll == 0 ? -1 : rec.Roll)));
+            }
+            catch (Exception)
+            {
+                Send(JsonConvert.SerializeObject(new Send { Players = board.Players }));
             }
         }
 

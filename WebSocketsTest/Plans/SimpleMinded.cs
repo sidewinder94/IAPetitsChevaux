@@ -7,9 +7,9 @@ namespace PetitsChevaux.Plans
     public static class SimpleMinded
     {
 
-        public static int NextMove(Player player, List<Player> board)
+        public static int NextMove(Player player, List<Player> board, int r = -1)
         {
-            int roll = Board.RollDice();
+            int roll = (r == -1) ? Board.RollDice() : r;
             //return roll;
             //Si on peut faire avancer un pion sur les cases de fin
             if (player.Pawns.Any(p => p.Type == CaseType.EndGame && (roll - p.Position) == 1) &&

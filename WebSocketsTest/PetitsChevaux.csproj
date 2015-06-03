@@ -69,6 +69,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contract\ContractBase.cs" />
+    <Compile Include="Contract\Received.cs" />
+    <Compile Include="Contract\Send.cs" />
     <Compile Include="Game\Board.cs" />
     <Compile Include="Game\Pawn.cs" />
     <Compile Include="Game\Player.cs" />

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace PetitsChevaux.Game
 {
@@ -8,18 +10,23 @@ namespace PetitsChevaux.Game
         public static readonly CaseType EndGame = new CaseType("e-{0}-{1}");
         public static readonly CaseType Square = new CaseType("sq-{0}");
 
-        private readonly String _value;
 
+        public String Value { get; private set; }
+
+        [JsonConstructor]
         private CaseType(String value)
         {
-            _value = value;
+            Value = value;
         }
+
+
+
 
         #region Equality members
 
         private bool Equals(CaseType other)
         {
-            return string.Equals(_value, other._value);
+            return string.Equals(Value, other.Value);
         }
 
         /// <summary>
@@ -46,7 +53,7 @@ namespace PetitsChevaux.Game
         /// </returns>
         public override int GetHashCode()
         {
-            return (_value != null ? _value.GetHashCode() : 0);
+            return (Value != null ? Value.GetHashCode() : 0);
         }
 
         #endregion
@@ -61,7 +68,7 @@ namespace PetitsChevaux.Game
         /// </returns>
         public override string ToString()
         {
-            return _value;
+            return Value;
         }
 
         #endregion

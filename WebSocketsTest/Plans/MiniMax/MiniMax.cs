@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -72,11 +71,11 @@ namespace PetitsChevaux.Plans.MiniMax
             return state.Evaluate(state.State[Board.Normalize(evaluatedPlayer, Board.PlayerNumber)]);
         }
 
-        public static int NextMove(Player player, List<Player> board)
+        public static int NextMove(Player player, List<Player> board, int r = -1)
         {
             var minMax = new MiniMax();
 
-            int roll = Board.RollDice();
+            int roll = (r == -1) ? Board.RollDice() : r;
 
             Node currentState = new Node { State = board, Roll = roll };
 

@@ -1,17 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace PetitsChevaux.Game
 {
     public class Pawn : ICloneable
     {
-        public CaseType Type { get; private set; }
+        public String TypeConverter
+        {
+            get { return Type.ToString(); }
+            set
+            {
+                if (value == CaseType.Classic.ToString())
+                {
+                    Type = CaseType.Classic;
+                }
+                if (value == CaseType.Square.ToString())
+                {
+                    Type = CaseType.Square;
+                }
+                if (value == CaseType.EndGame.ToString())
+                {
+                    Type = CaseType.EndGame;
+                }
+            }
+        }
+
+
+        [JsonIgnore]
+        public CaseType Type { get; set; }
         private int _position;
 
+        [JsonIgnore]
         public CaseType OldType { get; private set; }
         private int _oldPosition;
 
+        [JsonIgnore]
         public int OldPosition
         {
             get { return _oldPosition; }
@@ -22,7 +47,7 @@ namespace PetitsChevaux.Game
         public int Position
         {
             get { return _position; }
-            private set { _position = Board.Normalize(value); }
+            set { _position = Board.Normalize(value); }
         }
 
         public static void Move(Pawn pawn, int roll, List<Player> board = null)
@@ -136,8 +161,10 @@ namespace PetitsChevaux.Game
         {
             OldType = CaseType.Square;
             OldPosition = 0;
+            if (this.Type == null) this.Type = CaseType.Square;
         }
 
+        [JsonConstructor]
         public Pawn(CaseType type, int position)
             : this()
         {

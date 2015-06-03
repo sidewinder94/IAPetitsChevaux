@@ -4,348 +4,355 @@
     <meta charset="utf-8">
     <title>Test ws</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="script.js"></script>
 </head>
 <body>
-    Connect to : <input type="text" id="server" value="localhost:10000" />
-    <button id="startButton" onclick="connectToHost() ">Connect</button>
+    <p>
+        Player 1 : <input type="text" id="player0" value="localhost:10000"/>
+        <br/>
+        <br/>
+        Player 2 : <input type="text" id="player1" value="localhost:11000"/>
+        <br/>
+        <br/>
+        <button id="startButton" onclick="connectToHosts() ">Connect</button>
+    </p>
     <div class="grid">
-        <div class="col-6-15">
-            <div id="sq-2" class="playerhouse player2"></div>
-        </div>
-        <div class="col-3-15">
-            <div class="sub-grid">
-                <div class="col-1-3">
-                    <div id="c-26" class="player2"></div>
-                </div>
-                <div class="col-1-3">
-                    <div id="c-27" class="player3"></div>
-
-                </div>
-                <div class="col-1-3">
-                    <div id="c-28" class="player3">
-                    </div>
-
-                </div>
+    <div class="col-6-15">
+        <div id="sq-2" class="playerhouse player2"></div>
+    </div>
+    <div class="col-3-15">
+        <div class="sub-grid">
+            <div class="col-1-3">
+                <div id="c-26" class="player2"></div>
             </div>
-            <div class="sub-grid">
-                <div class="col-1-3">
-                    <div id="c-25" class="player2"></div>
-                </div>
-                <div class="col-1-3">
-                    <div id="e-3-1" class="player3">1</div>
-
-                </div>
-                <div class="col-1-3">
-                    <div id="c-29" class="player3"></div>
-
-                </div>
-            </div>
-            <div class="sub-grid">
-                <div class="col-1-3">
-                    <div id="c-24" class="player2"></div>
-                </div>
-                <div class="col-1-3">
-                    <div id="e-3-2" class="player3">2</div>
-
-                </div>
-                <div class="col-1-3">
-                    <div id="c-30" class="player3"></div>
-
-                </div>
-            </div>
-            <div class="sub-grid">
-                <div class="col-1-3">
-                    <div id="c-23" class="player2"></div>
-                </div>
-                <div class="col-1-3">
-                    <div id="e-3-3" class="player3">3</div>
-
-                </div>
-                <div class="col-1-3">
-                    <div id="c-31" class="player3"></div>
-
-                </div>
-            </div>
-            <div class="sub-grid">
-                <div class="col-1-3">
-                    <div id="c-22" class="player2"></div>
-                </div>
-                <div class="col-1-3">
-                    <div id="e-3-4" class="player3">4</div>
-
-                </div>
-                <div class="col-1-3">
-                    <div id="c-32" class="player3"></div>
-
-                </div>
-            </div>
-            <div class="sub-grid">
-                <div class="col-1-3">
-                    <div id="c-21" class="player2"></div>
-                </div>
-                <div class="col-1-3">
-                    <div id="e-3-5" class="player3">5</div>
-
-                </div>
-                <div class="col-1-3">
-                    <div id="c-33" class="player3"></div>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-6-15">
-            <div id="sq-3" class="playerhouse player3">
+            <div class="col-1-3">
+                <div id="c-27" class="player3"></div>
 
             </div>
-        </div>
-        <div class="row">
-            <div class="sub-grid">
-                <div class="col-1-15">
-                    <div id="c-14" class="player2"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-15" class="player2"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-16" class="player2"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-17" class="player2"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-18" class="player2"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-19" class="player2"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-20" class="player2"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="e-3-6" class="player3">6</div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-34" class="player3"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-35" class="player3"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-36" class="player3"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-37" class="player3"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-38" class="player3"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-39" class="player3"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-40" class="player3"></div>
+            <div class="col-1-3">
+                <div id="c-28" class="player3">
                 </div>
 
             </div>
         </div>
-        <div class="row">
+        <div class="sub-grid">
+            <div class="col-1-3">
+                <div id="c-25" class="player2"></div>
+            </div>
+            <div class="col-1-3">
+                <div id="e-3-1" class="player3">1</div>
+
+            </div>
+            <div class="col-1-3">
+                <div id="c-29" class="player3"></div>
+
+            </div>
+        </div>
+        <div class="sub-grid">
+            <div class="col-1-3">
+                <div id="c-24" class="player2"></div>
+            </div>
+            <div class="col-1-3">
+                <div id="e-3-2" class="player3">2</div>
+
+            </div>
+            <div class="col-1-3">
+                <div id="c-30" class="player3"></div>
+
+            </div>
+        </div>
+        <div class="sub-grid">
+            <div class="col-1-3">
+                <div id="c-23" class="player2"></div>
+            </div>
+            <div class="col-1-3">
+                <div id="e-3-3" class="player3">3</div>
+
+            </div>
+            <div class="col-1-3">
+                <div id="c-31" class="player3"></div>
+
+            </div>
+        </div>
+        <div class="sub-grid">
+            <div class="col-1-3">
+                <div id="c-22" class="player2"></div>
+            </div>
+            <div class="col-1-3">
+                <div id="e-3-4" class="player3">4</div>
+
+            </div>
+            <div class="col-1-3">
+                <div id="c-32" class="player3"></div>
+
+            </div>
+        </div>
+        <div class="sub-grid">
+            <div class="col-1-3">
+                <div id="c-21" class="player2"></div>
+            </div>
+            <div class="col-1-3">
+                <div id="e-3-5" class="player3">5</div>
+
+            </div>
+            <div class="col-1-3">
+                <div id="c-33" class="player3"></div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-6-15">
+        <div id="sq-3" class="playerhouse player3">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="sub-grid">
+            <div class="col-1-15">
+                <div id="c-14" class="player2"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-15" class="player2"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-16" class="player2"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-17" class="player2"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-18" class="player2"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-19" class="player2"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-20" class="player2"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="e-3-6" class="player3">6</div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-34" class="player3"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-35" class="player3"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-36" class="player3"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-37" class="player3"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-38" class="player3"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-39" class="player3"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-40" class="player3"></div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="sub-grid">
+            <div class="col-1-15">
+                <div id="c-13" class="player2"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="e-2-1" class="player2">1</div>
+            </div>
+            <div class="col-1-15">
+                <div id="e-2-2" class="player2">2</div>
+            </div>
+            <div class="col-1-15">
+                <div id="e-2-3" class="player2">3</div>
+            </div>
+            <div class="col-1-15">
+                <div id="e-2-4" class="player2">3</div>
+            </div>
+            <div class="col-1-15">
+                <div id="e-2-5" class="player2">5</div>
+            </div>
+            <div class="col-1-15">
+                <div id="e-2-6" class="player2">6</div>
+            </div>
+            <div class="col-1-15">
+                <div id="center"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="e-4-6" class="player4">6</div>
+            </div>
+            <div class="col-1-15">
+                <div id="e-4-5" class="player4">5</div>
+            </div>
+            <div class="col-1-15">
+                <div id="e-4-4" class="player4">4</div>
+            </div>
+            <div class="col-1-15">
+                <div id="e-4-3" class="player4">3</div>
+            </div>
+            <div class="col-1-15">
+                <div id="e-4-2" class="player4">2</div>
+            </div>
+            <div class="col-1-15">
+                <div id="e-4-1" class="player4">
+                    <div class="number">1</div>
+                    <div class="horse player4"></div>
+                </div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-41" class="player4"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="sub-grid">
+            <div class="col-1-15">
+                <div id="c-12" class="player1">
+                    <div class="horse player4"></div>
+                </div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-11" class="player1"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-10" class="player1"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-9" class="player1"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-8" class="player1"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-7" class="player1"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-6" class="player1"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="e-1-6" class="player1">6</div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-48" class="player4"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-47" class="player4"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-46" class="player4"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-45" class="player4"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-44" class="player4"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-43" class="player4"></div>
+            </div>
+            <div class="col-1-15">
+                <div id="c-42" class="player4"></div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-6-15">
+        <div id="sq-1" class="playerhouse player1">
+
+        </div>
+    </div>
+    <div class="col-3-15">
+        <div class="sub-grid">
             <div class="sub-grid">
-                <div class="col-1-15">
-                    <div id="c-13" class="player2"></div>
+                <div class="col-1-3">
+                    <div id="c-5" class="player1"></div>
                 </div>
-                <div class="col-1-15">
-                    <div id="e-2-1" class="player2">1</div>
+                <div class="col-1-3">
+                    <div id="e-1-5" class="player1">5</div>
+
                 </div>
-                <div class="col-1-15">
-                    <div id="e-2-2" class="player2">2</div>
-                </div>
-                <div class="col-1-15">
-                    <div id="e-2-3" class="player2">3</div>
-                </div>
-                <div class="col-1-15">
-                    <div id="e-2-4" class="player2">3</div>
-                </div>
-                <div class="col-1-15">
-                    <div id="e-2-5" class="player2">5</div>
-                </div>
-                <div class="col-1-15">
-                    <div id="e-2-6" class="player2">6</div>
-                </div>
-                <div class="col-1-15">
-                    <div id="center"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="e-4-6" class="player4">6</div>
-                </div>
-                <div class="col-1-15">
-                    <div id="e-4-5" class="player4">5</div>
-                </div>
-                <div class="col-1-15">
-                    <div id="e-4-4" class="player4">4</div>
-                </div>
-                <div class="col-1-15">
-                    <div id="e-4-3" class="player4">3</div>
-                </div>
-                <div class="col-1-15">
-                    <div id="e-4-2" class="player4">2</div>
-                </div>
-                <div class="col-1-15">
-                    <div id="e-4-1" class="player4">
-                        <div class="number">1</div>
-                        <div class="horse player4"></div>
-                    </div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-41" class="player4"></div>
+                <div class="col-1-3">
+                    <div id="c-49" class="player4"></div>
+
                 </div>
             </div>
-        </div>
-        <div class="row">
             <div class="sub-grid">
-                <div class="col-1-15">
-                    <div id="c-12" class="player1">
-                        <div class="horse player4"></div>
-                    </div>
+                <div class="col-1-3">
+                    <div id="c-4" class="player1"></div>
                 </div>
-                <div class="col-1-15">
-                    <div id="c-11" class="player1"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-10" class="player1"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-9" class="player1"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-8" class="player1"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-7" class="player1"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-6" class="player1"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="e-1-6" class="player1">6</div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-48" class="player4"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-47" class="player4"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-46" class="player4"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-45" class="player4"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-44" class="player4"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-43" class="player4"></div>
-                </div>
-                <div class="col-1-15">
-                    <div id="c-42" class="player4"></div>
-                </div>
+                <div class="col-1-3">
+                    <div id="e-1-4" class="player1">4</div>
 
-            </div>
-        </div>
-        <div class="col-6-15">
-            <div id="sq-1" class="playerhouse player1">
+                </div>
+                <div class="col-1-3">
+                    <div id="c-50" class="player4"></div>
 
+                </div>
             </div>
-        </div>
-        <div class="col-3-15">
             <div class="sub-grid">
-                <div class="sub-grid">
-                    <div class="col-1-3">
-                        <div id="c-5" class="player1"></div>
-                    </div>
-                    <div class="col-1-3">
-                        <div id="e-1-5" class="player1">5</div>
-
-                    </div>
-                    <div class="col-1-3">
-                        <div id="c-49" class="player4"></div>
-
-                    </div>
+                <div class="col-1-3">
+                    <div id="c-3" class="player1"></div>
                 </div>
-                <div class="sub-grid">
-                    <div class="col-1-3">
-                        <div id="c-4" class="player1"></div>
-                    </div>
-                    <div class="col-1-3">
-                        <div id="e-1-4" class="player1">4</div>
+                <div class="col-1-3">
+                    <div id="e-1-3" class="player1">3</div>
 
-                    </div>
-                    <div class="col-1-3">
-                        <div id="c-50" class="player4"></div>
-
-                    </div>
                 </div>
-                <div class="sub-grid">
-                    <div class="col-1-3">
-                        <div id="c-3" class="player1"></div>
-                    </div>
-                    <div class="col-1-3">
-                        <div id="e-1-3" class="player1">3</div>
+                <div class="col-1-3">
+                    <div id="c-51" class="player4"></div>
 
-                    </div>
-                    <div class="col-1-3">
-                        <div id="c-51" class="player4"></div>
-
-                    </div>
                 </div>
-                <div class="sub-grid">
-                    <div class="col-1-3">
-                        <div id="c-2" class="player1"></div>
-                    </div>
-                    <div class="col-1-3">
-                        <div id="e-1-2" class="player1">2</div>
-
-                    </div>
-                    <div class="col-1-3">
-                        <div id="c-52" class="player4"></div>
-
-                    </div>
+            </div>
+            <div class="sub-grid">
+                <div class="col-1-3">
+                    <div id="c-2" class="player1"></div>
                 </div>
-                <div class="sub-grid">
-                    <div class="col-1-3">
-                        <div id="c-1" class="player1"></div>
-                    </div>
-                    <div class="col-1-3">
-                        <div id="e-1-1" class="player1">1</div>
+                <div class="col-1-3">
+                    <div id="e-1-2" class="player1">2</div>
 
-                    </div>
-                    <div class="col-1-3">
-                        <div id="c-53" class="player4"></div>
-
-                    </div>
                 </div>
-                <div class="sub-grid">
-                    <div class="col-1-3">
-                        <div id="c-0" class="player1"></div>
-                    </div>
-                    <div class="col-1-3">
-                        <div id="c-55" class="player1"></div>
+                <div class="col-1-3">
+                    <div id="c-52" class="player4"></div>
 
-                    </div>
-                    <div class="col-1-3">
-                        <div id="c-54" class="player4"></div>
+                </div>
+            </div>
+            <div class="sub-grid">
+                <div class="col-1-3">
+                    <div id="c-1" class="player1"></div>
+                </div>
+                <div class="col-1-3">
+                    <div id="e-1-1" class="player1">1</div>
 
-                    </div>
+                </div>
+                <div class="col-1-3">
+                    <div id="c-53" class="player4"></div>
+
+                </div>
+            </div>
+            <div class="sub-grid">
+                <div class="col-1-3">
+                    <div id="c-0" class="player1"></div>
+                </div>
+                <div class="col-1-3">
+                    <div id="c-55" class="player1"></div>
+
+                </div>
+                <div class="col-1-3">
+                    <div id="c-54" class="player4"></div>
+
                 </div>
             </div>
         </div>
-        <div class="col-6-15">
-            <div id="sq-4" class="playerhouse player4">
+    </div>
+    <div class="col-6-15">
+        <div id="sq-4" class="playerhouse player4">
 
-            </div>
         </div>
+    </div>
     </div>
     <ul id="content"></ul>
 
