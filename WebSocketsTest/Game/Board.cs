@@ -20,14 +20,9 @@ namespace PetitsChevaux.Game
 
         public readonly List<Player> Players = new List<Player>();
 
-        private int _lastPlayer = 0;
+        private int _lastPlayer;
 
         public int PlayerId = -1;
-
-        public int NextPlayer
-        {
-            get { return Normalize((_lastPlayer), 4); }
-        }
 
         public Board()
         {

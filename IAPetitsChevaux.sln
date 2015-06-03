@@ -28,6 +28,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Web", "http://localhost:502
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsPetitsChevaux", "TestsPetitsChevaux\TestsPetitsChevaux.csproj", "{90CE7A48-B2CB-427A-8597-CDA379FD9F36}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PetitsChevauxPy", "PetitsChevauxPy\PetitsChevauxPy.pyproj", "{2ADD8D4D-0016-45D8-B45A-2A5EFCC49174}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,8 @@ Global
 		{90CE7A48-B2CB-427A-8597-CDA379FD9F36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90CE7A48-B2CB-427A-8597-CDA379FD9F36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90CE7A48-B2CB-427A-8597-CDA379FD9F36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2ADD8D4D-0016-45D8-B45A-2A5EFCC49174}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2ADD8D4D-0016-45D8-B45A-2A5EFCC49174}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
