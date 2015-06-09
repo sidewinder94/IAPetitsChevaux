@@ -89,7 +89,7 @@ namespace PetitsChevaux.Game
                     {
                         var removed = player.Pawns.First(p => p.Position == newPosition &&
                                                               p.Type == type);
-                        removed.MoveTo(CaseType.Square, 0, board);
+                        removed.Eaten();
                     }
 
                     //Si 2 pions du même joueur sur la même case, on ne peut atterrir dessus... on annule donc le déplacement
@@ -118,6 +118,12 @@ namespace PetitsChevaux.Game
             MoveTo(CaseType.Classic, Board.Normalize(this.Position + roll), board);
 
             return this;
+        }
+
+        private void Eaten()
+        {
+            Position = 0;
+            Type = CaseType.Square;
         }
 
         public Pawn(int id)

@@ -25,6 +25,12 @@ namespace TestsPetitsChevaux
 
         }
 
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            _minMax = null;
+            _board = null;
+        }
         //Player 0 rolled 1
         //{"c-53":1,"c-49":1,"c-32":1,"c-0":1,"sq-1":0,"c-19":2,"sq-2":3,"Player rolling : ":1,"rolled":5}
         [TestMethod]
@@ -70,7 +76,7 @@ namespace TestsPetitsChevaux
         public void TestDecisionMiniMaxEndGame()
         {
 
-            _board.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.EndGame, 54, _board).MoveTo(CaseType.Classic, 55, _board);
+            _board.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.Classic, 54, _board).MoveTo(CaseType.Classic, 55, _board);
             _board.First(p => p.Id == 0).Pawns[1].MoveTo(CaseType.EndGame, 4, _board).MoveTo(CaseType.EndGame, 5, _board);
             _board.First(p => p.Id == 0).Pawns[2].MoveTo(CaseType.Classic, 31, _board).MoveTo(CaseType.Classic, 49, _board);
             _board.First(p => p.Id == 0).Pawns[3].MoveTo(CaseType.Classic, 0, _board);
@@ -92,7 +98,7 @@ namespace TestsPetitsChevaux
         public void TestDecisionMiniMaxEatThePawn()
         {
 
-            _board.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.EndGame, 54, _board).MoveTo(CaseType.Classic, 55, _board);
+            _board.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.Classic, 54, _board).MoveTo(CaseType.Classic, 55, _board);
             _board.First(p => p.Id == 0).Pawns[1].MoveTo(CaseType.Classic, 31, _board).MoveTo(CaseType.Classic, 49, _board);
 
             _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 1, _board).MoveTo(CaseType.Classic, 1, _board);
