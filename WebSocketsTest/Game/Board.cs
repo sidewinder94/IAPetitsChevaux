@@ -43,7 +43,7 @@ namespace PetitsChevaux.Game
             {
                 Players.Add(new Player(i)
                 {
-                    NextMove = ((i == 0) ? (Func<Player, List<Player>, int>)MiniMax.NextMove : SimpleMinded.NextMove)
+                    NextMove = ((i == 0) ? (Func<Player, List<Player>, int>)NegaMax.NextMove : SimpleMinded.NextMove)
                 });
             }
         }

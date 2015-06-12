@@ -29,6 +29,7 @@ namespace TestsPetitsChevaux
         public void TestCleanup()
         {
             _startPlayer = null;
+            _board = null;
         }
 
         [TestMethod]

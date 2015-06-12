@@ -6,16 +6,23 @@ namespace PetitsChevaux.Game
 {
     public class Pawn : ICloneable
     {
+
+        public readonly int Id;
+
         public CaseType Type { get; private set; }
         private int _position;
 
-        public CaseType OldType { get; private set; }
-        private int _oldPosition;
+
+        private Stack<Tuple<int, CaseType>> _old = new Stack<Tuple<int, CaseType>>();
+
+        public CaseType OldType
+        {
+            get { return _old.Peek().Item2; }
+        }
 
         public int OldPosition
         {
-            get { return _oldPosition; }
-            private set { _oldPosition = Board.Normalize(value); }
+            get { return _old.Peek().Item1; }
         }
 
 
@@ -31,12 +38,24 @@ namespace PetitsChevaux.Game
         }
 
 
-
+        public Pawn RollBack(int moves = 1)
+        {
+            while (moves > 0)
+            {
+                if (_old.Count > 1)
+                {
+                    var old = _old.Pop();
+                    Position = old.Item1;
+                    Type = old.Item2;
+                }
+                moves--;
+            }
+            return this;
+        }
 
         public Pawn NoMove()
         {
-            OldPosition = Position;
-            OldType = Type;
+            _old.Push(new Tuple<int, CaseType>(Position, Type));
             return this;
         }
 
@@ -47,8 +66,10 @@ namespace PetitsChevaux.Game
 
             if (type == CaseType.Square)
             {
+                _old.Push(new Tuple<int, CaseType>(Position, Type));
                 Type = type;
                 Position = position;
+                return this;
             }
 
             Player owner = board.Find(p => p.Pawns.Contains(this));
@@ -68,7 +89,7 @@ namespace PetitsChevaux.Game
                     {
                         var removed = player.Pawns.First(p => p.Position == newPosition &&
                                                               p.Type == type);
-                        removed.MoveTo(CaseType.Square, 0, board);
+                        removed.Eaten();
                     }
 
                     //Si 2 pions du même joueur sur la même case, on ne peut atterrir dessus... on annule donc le déplacement
@@ -81,8 +102,8 @@ namespace PetitsChevaux.Game
                 });
             }
 
-            this.OldPosition = this.Position;
-            this.OldType = this.Type;
+
+            _old.Push(new Tuple<int, CaseType>(Position, Type));
 
             this.Position = newPosition;
             this.Type = newType;
@@ -94,52 +115,26 @@ namespace PetitsChevaux.Game
         {
             if (board == null) throw new ArgumentException("Null Board", "board");
 
-            Player owner = board.Find(p => p.Pawns.Contains(this));
-
-            var newPosition = Board.Normalize(this.Position + roll);
-
-            board.ForEach(player =>
-            {
-
-                var count = player.Pawns.Count(p => p.Position == newPosition &&
-                    p.Type == this.Type);
-                //Si un pion d'un autre joueur est sur la case de destination, il est renvoyé au "Box"
-                if (count == 1 && player != owner)
-                {
-                    var removed = player.Pawns.First(p => p.Position == newPosition &&
-                        p.Type == this.Type);
-                    removed.Position = 0;
-                    removed.Type = CaseType.Square;
-                }
-
-                if (count == 1 && player == owner && Type == CaseType.EndGame)
-                {
-                    newPosition = this.Position;
-                }
-
-                //Si 2 pions du même joueur sur la même case, on ne peut atterrir dessus... on annule donc le déplacement
-                if (count == 2)
-                {
-                    newPosition = this.Position;
-                }
-
-            });
-
-            this.OldPosition = this.Position;
-
-            this.Position = newPosition;
+            MoveTo(CaseType.Classic, Board.Normalize(this.Position + roll), board);
 
             return this;
         }
 
-        public Pawn()
+        private void Eaten()
         {
-            OldType = CaseType.Square;
-            OldPosition = 0;
+            Position = 0;
+            Type = CaseType.Square;
         }
 
-        public Pawn(CaseType type, int position)
-            : this()
+        public Pawn(int id)
+        {
+            Id = id;
+
+            _old.Push(new Tuple<int, CaseType>(0, CaseType.Square));
+        }
+
+        public Pawn(CaseType type, int position, int id)
+            : this(id)
         {
             Type = type;
             Position = position;
@@ -183,13 +178,15 @@ namespace PetitsChevaux.Game
         /// </returns>
         public object Clone()
         {
-            return new Pawn()
+            var result = new Pawn(this.Id)
             {
                 Type = this.Type,
                 Position = this.Position,
-                OldPosition = this.OldPosition,
-                OldType = this.OldType
             };
+
+            result._old.Push(new Tuple<int, CaseType>(this.OldPosition, this.OldType));
+
+            return result;
         }
         #endregion
 

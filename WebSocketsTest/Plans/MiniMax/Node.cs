@@ -19,7 +19,17 @@ namespace PetitsChevaux.Plans.MiniMax
         }
 
 
-        private Node RefreshPawns(Pawn moved = null)
+        public Node RollBack(int moves = 1)
+        {
+            State.ForEach(pl => pl.Pawns.ForEach(pa =>
+            {
+                pa.RollBack(moves);
+            }));
+
+            return this;
+        }
+
+        public Node RefreshPawns(Pawn moved = null)
         {
             State.ForEach(p => p.Pawns.ForEach(pa =>
             {
@@ -35,61 +45,46 @@ namespace PetitsChevaux.Plans.MiniMax
             return this;
         }
 
-        public IEnumerable<Node> GetNextNodes(int playerId = -1)
+        public IEnumerable<Tuple<Pawn, int, CaseType>> GetNextNodes(int playerId = -1)
         {
-            if (playerId == -1) throw new ArgumentException("PLayer ID Invalid", "playerId");
+            int roll = Roll;
+
+            if (playerId == -1) throw new ArgumentException("Player ID Invalid", "playerId");
             bool moved = false;
             foreach (var p in State.First(player => player.Id == playerId).Pawns)
             {
                 if (p.Type.Equals(CaseType.Classic))
                 {
-                    var newState = CloneState();
-                    var movedPawn = newState.First(player => player.Id == playerId).Pawns.First(pa => pa.Equals(p)).Move(Roll, newState);
                     moved = true;
-                    yield return new Node { State = newState }.RefreshPawns(movedPawn);
+                    yield return new Tuple<Pawn, int, CaseType>(p, Board.Normalize(p.Position + roll), CaseType.Classic);
                 }
 
                 if (p.Type.Equals(CaseType.Classic) &&
                     p.Position ==
                     (Board.Normalize(State.First(player => player.Id == playerId).StartCase - 1))
-                    && Roll == 1)
+                    && roll == 1)
                 {
-                    var newState = CloneState();
-                    var paw =
-                        newState.First(player => player.Id == playerId).Pawns.First(pa => pa.Equals(p));
-                    paw.MoveTo(CaseType.EndGame, 1, newState);
                     moved = true;
-                    yield return new Node { State = newState }.RefreshPawns(paw);
+                    yield return new Tuple<Pawn, int, CaseType>(p, 1, CaseType.EndGame);
 
                 }
 
-                if (p.Type.Equals(CaseType.EndGame) && (Roll == p.Position + 1))
+                if (p.Type.Equals(CaseType.EndGame) && (roll == p.Position + 1))
                 {
-                    var newState = CloneState();
-                    var paw = newState
-                        .First(player => player.Id == playerId)
-                        .Pawns.First(pa => pa.Equals(p))
-                        .MoveTo(CaseType.EndGame, Roll, newState);
                     moved = true;
-                    yield return new Node { State = newState }.RefreshPawns(paw);
+                    yield return new Tuple<Pawn, int, CaseType>(p, roll, CaseType.EndGame);
                 }
 
-                if (p.Type.Equals(CaseType.Square) && Roll == 6)
+                if (p.Type.Equals(CaseType.Square) && roll == 6)
                 {
-                    var newState = CloneState();
-                    var cPLayer = newState.First(player => player.Id == playerId);
-
-                    var paw =
-                        cPLayer.Pawns.First(pa => pa.Equals(p));
-
-                    paw.MoveTo(CaseType.Classic, cPLayer.StartCase, newState);
+                    var cPLayer = State.First(player => player.Id == playerId);
                     moved = true;
-                    yield return new Node { State = newState }.RefreshPawns(paw);
+                    yield return new Tuple<Pawn, int, CaseType>(p, cPLayer.StartCase, CaseType.Classic);
                 }
             }
             if (!moved)
             {
-                yield return new Node { State = CloneState() }.RefreshPawns();
+                yield return null;
             }
         }
 
