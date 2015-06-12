@@ -14,6 +14,8 @@ namespace TestsPetitsChevaux
         private List<Player> _board = null;
         private NegaMax _minMax = null;
 
+        private static int _depth = 5;
+
         [TestInitialize]
         public void Initialize()
         {
@@ -48,10 +50,20 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 2 };
 
-            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
+            var nextState = _minMax.DecisionNegaMax(currentState, _depth, 0);
 
 
             Assert.IsTrue(nextState.Item2 == 55, nextState.ToString());
+        }
+
+        [TestMethod]
+        public void TestDecisionNegaMaxFirstOut()
+        {
+            var currentState = new Node { State = _board, Roll = 6 };
+
+            var nextState = NegaMax.NextMove(currentState.State.First(p => p.Id == 0), currentState.State);
+
+            Assert.IsTrue(currentState.State.First(p => p.Id == 0).Pawns.Any(pa => pa.Type != CaseType.Square), nextState.ToString());
         }
 
         [TestMethod]
@@ -67,9 +79,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 1 };
 
-            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
-
-
+            var nextState = _minMax.DecisionNegaMax(currentState, _depth, 0);
 
             Assert.IsTrue(nextState.Item2 == 1 && nextState.Item3 == CaseType.EndGame,
                 nextState.ToString());
@@ -88,7 +98,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 6 };
 
-            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
+            var nextState = _minMax.DecisionNegaMax(currentState, _depth, 0);
 
             nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, currentState.State);
 
@@ -109,7 +119,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 2 };
 
-            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
+            var nextState = _minMax.DecisionNegaMax(currentState, _depth, 0);
 
             nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, currentState.State);
 
@@ -134,7 +144,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 4 };
 
-            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
+            var nextState = _minMax.DecisionNegaMax(currentState, _depth, 0);
 
             nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, currentState.State);
 

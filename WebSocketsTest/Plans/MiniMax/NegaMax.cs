@@ -16,6 +16,7 @@ namespace PetitsChevaux.Plans.MiniMax
                 .Select(st => new Tuple<Tuple<Pawn, int, CaseType>, int>(st, -_DecisionNegaMax(state, depth, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber), st)))
                 .ToList();
 
+
             return actions.First(a => a.Item2 == actions.Max(m => m.Item2)).Item1;
         }
 
@@ -86,6 +87,7 @@ namespace PetitsChevaux.Plans.MiniMax
 
             while (minMax._run)
             {
+                currentState.Roll = roll;
                 var st = minMax.DecisionNegaMax(currentState, depth, player.Id);
 
                 if (minMax._run)
@@ -96,7 +98,8 @@ namespace PetitsChevaux.Plans.MiniMax
                 depth++;
             }
 
-            nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, board);
+
+            if (nextState != null) nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, board);
 
             return roll;
         }
