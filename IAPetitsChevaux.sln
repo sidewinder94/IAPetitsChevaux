@@ -28,6 +28,11 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Web", "http://localhost:502
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsPetitsChevaux", "TestsPetitsChevaux\TestsPetitsChevaux.csproj", "{90CE7A48-B2CB-427A-8597-CDA379FD9F36}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{14C21747-F079-4910-A9C8-B5C10740E87E}"
+	ProjectSection(SolutionItems) = preProject
+		Parallel.testsettings = Parallel.testsettings
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

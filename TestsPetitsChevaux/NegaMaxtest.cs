@@ -48,7 +48,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 2 };
 
-            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
+            var nextState = _minMax.DecisionNegaMax(currentState, 8, 0);
 
 
             Assert.IsTrue(nextState.Item2 == 55, nextState.ToString());
@@ -67,7 +67,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 1 };
 
-            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
+            var nextState = _minMax.DecisionNegaMax(currentState, 8, 0);
 
 
 
@@ -88,7 +88,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 6 };
 
-            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
+            var nextState = _minMax.DecisionNegaMax(currentState, 8, 0);
 
             nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, currentState.State);
 
@@ -109,7 +109,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 2 };
 
-            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
+            var nextState = _minMax.DecisionNegaMax(currentState, 8, 0);
 
             nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, currentState.State);
 
@@ -134,7 +134,7 @@ namespace TestsPetitsChevaux
 
             var currentState = new Node { State = _board, Roll = 4 };
 
-            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
+            var nextState = _minMax.DecisionNegaMax(currentState, 8, 0);
 
             nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, currentState.State);
 
