@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using PetitsChevaux.Game;
 using System.Timers;
 
@@ -9,18 +10,19 @@ namespace PetitsChevaux.Plans.MiniMax
     public class NegaMax
     {
         private bool _run = true;
+        private int _playerId = 0;
 
         public Tuple<Pawn, int, CaseType> DecisionNegaMax(Node state, int depth, int currentPlayerId)
         {
             var actions = state.GetNextNodes(Board.Normalize(currentPlayerId, Board.PlayerNumber))
-                .Select(st => new Tuple<Tuple<Pawn, int, CaseType>, int>(st, -_DecisionNegaMax(state, depth, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber), st)))
+                .Select(st => new Tuple<Tuple<Pawn, int, CaseType>, int>(st, -_DecisionNegaMax(state, depth, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber), st, int.MinValue, int.MaxValue)))
                 .ToList();
 
 
             return actions.First(a => a.Item2 == actions.Max(m => m.Item2)).Item1;
         }
 
-        private int _DecisionNegaMax(Node state, int depth, int currentPlayerId, Tuple<Pawn, int, CaseType> action)
+        private int _DecisionNegaMax(Node state, int depth, int currentPlayerId, Tuple<Pawn, int, CaseType> action, int alpha, int beta)
         {
             if (action == null)
             {
@@ -41,21 +43,94 @@ namespace PetitsChevaux.Plans.MiniMax
                 return u;
             }
 
-            int[] rolls = new int[6];
 
-            for (var roll = 1; roll < 7; roll++)
+            int[] temp = new int[6];
+            foreach (var e in Enumerable.Range(0, 6))
             {
-                state.Roll = roll;
-                rolls[roll - 1] =
-                    state.GetNextNodes(Board.Normalize(currentPlayerId, Board.PlayerNumber))
-                        .Max(a => -_DecisionNegaMax(state, depth - 1, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber), a));
+                temp[e] = _playerId == currentPlayerId ? int.MaxValue : int.MinValue;
+            }
+
+
+            int best = int.MinValue;
+
+            foreach (var pa in state.State.First(p => p.Id == currentPlayerId).Pawns)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    state.Roll = i + 1;
+
+                    var actions = state.GetActions(pa, currentPlayerId).ToList();
+                    var utils = actions.Select(a => EvaluateAction(a, state));
+
+                    var util =
+                        actions.Zip(utils, (a, u) => new Tuple<Tuple<Pawn, int, CaseType>, int>(a, u))
+                            .OrderByDescending(t => t.Item2)
+                            .First();
+
+
+                    var result = -_DecisionNegaMax(state, depth - 1, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber),
+                                util.Item1, alpha, beta);
+
+                    temp[i] = result;
+
+                    if (currentPlayerId == _playerId)
+                    {
+                        if (temp.Average() >= beta)
+                        {
+                            state.RollBack();
+                            return (int)Math.Round(temp.Average());
+                        }
+                    }
+                    else
+                    {
+                        if (temp.Average() <= alpha)
+                        {
+                            state.RollBack();
+                            return (int)Math.Round(temp.Average());
+                        }
+                    }
+                }
+
+                best = Math.Max((int)Math.Round(temp.Average()), best);
+
+                if (currentPlayerId == _playerId)
+                {
+                    alpha = Math.Max((int)Math.Round(temp.Average()), alpha);
+
+                }
+                else
+                {
+                    beta = Math.Min((int)Math.Round(temp.Average()), beta);
+                }
 
             }
 
             state.RollBack();
 
-            return (int)Math.Round(rolls.Average());
+            return best;
         }
+
+
+
+        private int EvaluateAction(Tuple<Pawn, int, CaseType> action, Node state)
+        {
+            if (action != null)
+            {
+                action.Item1.MoveTo(action.Item3, action.Item2, state.State);
+                state.RefreshPawns(action.Item1);
+            }
+            else
+            {
+                state.RefreshPawns();
+            }
+
+            var result = Utility(state, _playerId);
+
+            state.RollBack();
+
+            return result;
+        }
+
 
         private int Utility(Node state, int currentPlayerId)
         {
@@ -65,7 +140,8 @@ namespace PetitsChevaux.Plans.MiniMax
 
         public static int NextMove(Player player, List<Player> board)
         {
-            var minMax = new NegaMax();
+            var minMax = new NegaMax { _playerId = player.Id };
+
 
             int roll = Board.RollDice();
 

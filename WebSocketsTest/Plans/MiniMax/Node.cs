@@ -87,6 +87,45 @@ namespace PetitsChevaux.Plans.MiniMax
                 yield return null;
             }
         }
+        public IEnumerable<Tuple<Pawn, int, CaseType>> GetActions(Pawn pawn, int playerId = -1)
+        {
+            int roll = Roll;
+
+            if (playerId == -1) throw new ArgumentException("Player ID Invalid", "playerId");
+            bool moved = false;
+            if (pawn.Type.Equals(CaseType.Classic))
+            {
+                moved = true;
+                yield return new Tuple<Pawn, int, CaseType>(pawn, Board.Normalize(pawn.Position + roll), CaseType.Classic);
+            }
+
+            if (pawn.Type.Equals(CaseType.Classic) &&
+                pawn.Position ==
+                (Board.Normalize(State.First(player => player.Id == playerId).StartCase - 1))
+                && roll == 1)
+            {
+                moved = true;
+                yield return new Tuple<Pawn, int, CaseType>(pawn, 1, CaseType.EndGame);
+
+            }
+
+            if (pawn.Type.Equals(CaseType.EndGame) && (roll == pawn.Position + 1))
+            {
+                moved = true;
+                yield return new Tuple<Pawn, int, CaseType>(pawn, roll, CaseType.EndGame);
+            }
+
+            if (pawn.Type.Equals(CaseType.Square) && roll == 6)
+            {
+                var cPLayer = State.First(player => player.Id == playerId);
+                moved = true;
+                yield return new Tuple<Pawn, int, CaseType>(pawn, cPLayer.StartCase, CaseType.Classic);
+            }
+            if (!moved)
+            {
+                yield return null;
+            }
+        }
 
         public int Evaluate(Player player)
         {
