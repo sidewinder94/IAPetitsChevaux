@@ -21,6 +21,8 @@ namespace PetitsChevaux.Game
 
         private int _lastPlayer = 0;
 
+        public Boolean Run;
+
         public int NextPlayer
         {
             get { return Normalize((_lastPlayer), 4); }
