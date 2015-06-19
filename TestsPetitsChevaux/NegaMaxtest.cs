@@ -59,11 +59,15 @@ namespace TestsPetitsChevaux
         [TestMethod]
         public void TestDecisionNegaMaxFirstOut()
         {
+            _board.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.Square, 0, _board);
+            _board.First(p => p.Id == 0).Pawns[1].MoveTo(CaseType.Square, 0, _board);
+            _board.First(p => p.Id == 0).Pawns[2].MoveTo(CaseType.Square, 0, _board);
+            _board.First(p => p.Id == 0).Pawns[3].MoveTo(CaseType.Square, 0, _board);
             var currentState = new Node { State = _board, Roll = 6 };
 
-            var nextState = NegaMax.NextMove(currentState.State.First(p => p.Id == 0), currentState.State);
+            var nextState = _minMax.DecisionNegaMax(currentState, 3, 0);
 
-            Assert.IsTrue(currentState.State.First(p => p.Id == 0).Pawns.Any(pa => pa.Type != CaseType.Square), nextState.ToString());
+            Assert.IsTrue(nextState.Item3 != CaseType.Square, nextState.ToString());
         }
 
         [TestMethod]
@@ -84,6 +88,29 @@ namespace TestsPetitsChevaux
             Assert.IsTrue(nextState.Item2 == 1 && nextState.Item3 == CaseType.EndGame,
                 nextState.ToString());
         }
+
+        [TestMethod]
+        public void TestDecisionNegaMaxEndLeaveStart()
+        {
+
+            _board.First(p => p.Id == 0).Pawns[0].MoveTo(CaseType.Classic, 42, _board).MoveTo(CaseType.Classic, 46, _board);
+            _board.First(p => p.Id == 0).Pawns[1].MoveTo(CaseType.Square, 0, _board);
+            _board.First(p => p.Id == 0).Pawns[2].MoveTo(CaseType.Square, 0, _board);
+            _board.First(p => p.Id == 0).Pawns[3].MoveTo(CaseType.Square, 0, _board);
+
+            _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 11, _board).MoveTo(CaseType.Classic,13,_board);
+            _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 14, _board).MoveTo(CaseType.Classic, 20, _board);
+            _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Square, 0, _board);
+            _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Square, 0, _board);
+
+            var currentState = new Node { State = _board, Roll = 6 };
+
+            var nextState = _minMax.DecisionNegaMax(currentState, _depth, 0);
+
+            Assert.IsTrue(nextState.Item1.Id != _board.First(p => p.Id == 0).Pawns[0].Id && nextState.Item1.Position == 0,
+                nextState.ToString());
+        }
+
 
         [TestMethod]
         public void TestDecisionNegaMaxEndGame()
