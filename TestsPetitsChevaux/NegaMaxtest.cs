@@ -98,10 +98,10 @@ namespace TestsPetitsChevaux
             _board.First(p => p.Id == 0).Pawns[2].MoveTo(CaseType.Square, 0, _board);
             _board.First(p => p.Id == 0).Pawns[3].MoveTo(CaseType.Square, 0, _board);
 
-            _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 11, _board).MoveTo(CaseType.Classic,13,_board);
-            _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 14, _board).MoveTo(CaseType.Classic, 20, _board);
-            _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Square, 0, _board);
-            _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Square, 0, _board);
+            _board.First(p => p.Id == 1).Pawns[0].MoveTo(CaseType.Classic, 11, _board).MoveTo(CaseType.Classic,12,_board);
+            _board.First(p => p.Id == 1).Pawns[1].MoveTo(CaseType.Classic, 14, _board).MoveTo(CaseType.Classic, 20, _board);
+            _board.First(p => p.Id == 1).Pawns[2].MoveTo(CaseType.Square, 0, _board);
+            _board.First(p => p.Id == 1).Pawns[3].MoveTo(CaseType.Square, 0, _board);
 
             var currentState = new Node { State = _board, Roll = 6 };
 
