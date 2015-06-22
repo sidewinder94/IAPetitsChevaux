@@ -14,17 +14,7 @@ TARGET = exe
 
 # Builds all configurations for this project...
 .PHONY: build_all_configurations
-build_all_configurations: Debug Release Linux 
-
-# Builds the Debug configuration...
-.PHONY: Debug
-Debug: create_folders $(FILES)
-	$(CSHARP_COMPILER) $(Debug_REFERENCES) $(Debug_FLAGS) -out:$(Debug_OUTPUT_FOLDER)/$(OUTPUT_FILE) -target:$(TARGET) $(FILES)
-
-# Builds the Release configuration...
-.PHONY: Release
-Release: create_folders $(FILES)
-	$(CSHARP_COMPILER) $(Release_REFERENCES) $(Release_FLAGS) -out:$(Release_OUTPUT_FOLDER)/$(OUTPUT_FILE) -target:$(TARGET) $(FILES)
+build_all_configurations: Linux 
 
 # Builds the Linux configuration...
 .PHONY: Linux
@@ -34,20 +24,6 @@ Linux: create_folders $(FILES)
 # Creates the output folders for each configuration, and copies references...
 .PHONY: create_folders
 create_folders:
-	mkdir -p $(Debug_OUTPUT_FOLDER)
-	cp ../packages/log4net.2.0.3/lib/net40-full/log4net.dll $(Debug_OUTPUT_FOLDER)
-	cp ../packages/Newtonsoft.Json.6.0.8/lib/net45/Newtonsoft.Json.dll $(Debug_OUTPUT_FOLDER)
-	cp ../packages/SuperWebSocket.0.9.0.2/lib/net40/SuperSocket.Common.dll $(Debug_OUTPUT_FOLDER)
-	cp ../packages/SuperWebSocket.0.9.0.2/lib/net40/SuperSocket.SocketBase.dll $(Debug_OUTPUT_FOLDER)
-	cp ../packages/SuperWebSocket.0.9.0.2/lib/net40/SuperSocket.SocketEngine.dll $(Debug_OUTPUT_FOLDER)
-	cp ../packages/SuperWebSocket.0.9.0.2/lib/net40/SuperWebSocket.dll $(Debug_OUTPUT_FOLDER)
-	mkdir -p $(Release_OUTPUT_FOLDER)
-	cp ../packages/log4net.2.0.3/lib/net40-full/log4net.dll $(Release_OUTPUT_FOLDER)
-	cp ../packages/Newtonsoft.Json.6.0.8/lib/net45/Newtonsoft.Json.dll $(Release_OUTPUT_FOLDER)
-	cp ../packages/SuperWebSocket.0.9.0.2/lib/net40/SuperSocket.Common.dll $(Release_OUTPUT_FOLDER)
-	cp ../packages/SuperWebSocket.0.9.0.2/lib/net40/SuperSocket.SocketBase.dll $(Release_OUTPUT_FOLDER)
-	cp ../packages/SuperWebSocket.0.9.0.2/lib/net40/SuperSocket.SocketEngine.dll $(Release_OUTPUT_FOLDER)
-	cp ../packages/SuperWebSocket.0.9.0.2/lib/net40/SuperWebSocket.dll $(Release_OUTPUT_FOLDER)
 	mkdir -p $(Linux_OUTPUT_FOLDER)
 	cp ../packages/log4net.2.0.3/lib/net40-full/log4net.dll $(Linux_OUTPUT_FOLDER)
 	cp ../packages/Newtonsoft.Json.6.0.8/lib/net45/Newtonsoft.Json.dll $(Linux_OUTPUT_FOLDER)
