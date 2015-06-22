@@ -15,6 +15,10 @@ namespace PetitsChevaux.Game
             _value = value;
         }
 
+
+
+
+
         #region Equality members
 
         private bool Equals(CaseType other)
@@ -22,6 +26,16 @@ namespace PetitsChevaux.Game
             return string.Equals(_value, other._value);
         }
 
+        public static bool operator ==(CaseType c1, CaseType c2)
+        {
+            if (ReferenceEquals(c1, null)) return ReferenceEquals(c2, null);
+            return !ReferenceEquals(c2, null) && c1.Equals(c2);
+        }
+
+        public static bool operator !=(CaseType c1, CaseType c2)
+        {
+            return !(c1 == c2);
+        }
         /// <summary>
         /// Détermine si l'objet <see cref="T:System.Object"/> spécifié est égal à l'objet <see cref="T:System.Object"/> actuel.
         /// </summary>

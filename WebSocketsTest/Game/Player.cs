@@ -57,13 +57,10 @@ namespace PetitsChevaux.Game
             {
                 int result = 0;
 
-                result += (int)(Pawns.Count(p => p.Type != CaseType.Square)*Math.Pow(56, 2));
+                result += (int)(Pawns.Count(p => p.Type != CaseType.Square) * Math.Pow(56, 2));
 
                 Pawns.ForEach(p =>
                 {
-                    //if (p.OldType == CaseType.Square && p.Type == CaseType.Classic && p.Position == 0) result +=
-                     //(int)Math.Pow(56, 3);
-
                     //Si sur les cases de fin ajouter 56 à la position, puisqu'on reprends de 1 et qu'on considère ce mouvement comme plus important
                     if (p.Type == CaseType.EndGame) result += (int)Math.Pow(p.Position * 10 + 56, 2);
                     if (p.Type == CaseType.Classic) result += (int)Math.Pow(Board.Normalize(p.Position - StartCase), 2);
