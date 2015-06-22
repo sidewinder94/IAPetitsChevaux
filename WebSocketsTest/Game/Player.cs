@@ -20,7 +20,7 @@ namespace PetitsChevaux.Game
 
         public readonly List<Pawn> Pawns = new List<Pawn>();
 
-        public Func<Player, List<Player>, int> NextMove { private get; set; }
+        public Func<Player, List<Player>, int, Contracts.Action> NextMove { private get; set; }
 
         public int StartCase
         {
@@ -45,10 +45,10 @@ namespace PetitsChevaux.Game
             }
         }
 
-        public int Play(List<Player> board)
+        public Contracts.Action Play(List<Player> board, int roll)
         {
             if (NextMove == null) throw new ArgumentException("No Method to determine " + this + " next move");
-            return NextMove(this, board);
+            return NextMove(this, board, roll);
         }
 
         public int Evaluate

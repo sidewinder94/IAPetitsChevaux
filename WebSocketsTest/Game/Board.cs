@@ -14,28 +14,16 @@ namespace PetitsChevaux.Game
 
         [UsedImplicitly]
         public static int PlayerNumber = 4;
-
-        private static readonly Random RandomGenerator = new Random();
-
         public readonly List<Player> Players = new List<Player>();
 
-        private int _lastPlayer = 0;
-
-        public Boolean Run;
-
-        public int NextPlayer
-        {
-            get { return Normalize((_lastPlayer), 4); }
-        }
 
         public Board()
         {
             GeneratePlayers();
         }
-
-        public static int RollDice()
+        public Board(List<Player> players)
         {
-            return RandomGenerator.Next(1, 7);
+            this.Players = players;
         }
 
         public void GeneratePlayers()
@@ -45,45 +33,16 @@ namespace PetitsChevaux.Game
             {
                 Players.Add(new Player(i)
                 {
-                    NextMove = ((i == 0) ? (Func<Player, List<Player>, int>)NegaMax.NextMove : SimpleMinded.NextMove)
+                    NextMove = ((i == 0) ? (Func<Player, List<Player>, int, Contracts.Action>)NegaMax.NextMove : SimpleMinded.NextMove)
                 });
             }
         }
-
-        public Dictionary<String, int> NextTurn()
+        public Contracts.Action NextTurn(int playerId, int roll)
         {
-            int player = Normalize(_lastPlayer++, Board.PlayerNumber);
-            int roll = Players[player].Play(Players);
 
-            var result = new Dictionary<String, int>();
-            Players.ForEach(p =>
-            {
-                var squareCounter = 0;
-                p.Pawns.ForEach(pawn =>
-                {
-                    if (pawn.Type == CaseType.Classic)
-                    {
-                        if (!result.ContainsKey(String.Format(CaseType.Classic.ToString(), pawn.Position)))
-                        {
-                            result.Add(String.Format(CaseType.Classic.ToString(), pawn.Position), p.Id + 1);
-                        }
-                    }
-                    else if (pawn.Type == CaseType.EndGame)
-                    {
-                        if (!result.ContainsKey(String.Format(CaseType.EndGame.ToString(), p.Id + 1, pawn.Position)))
-                        {
-                            result.Add(String.Format(CaseType.EndGame.ToString(), p.Id + 1, pawn.Position), 0);
-                        }
-                    }
-                    else if (pawn.Type == CaseType.Square)
-                    {
-                        squareCounter++;
-                    }
-                });
-                result.Add(String.Format(CaseType.Square.ToString(), p.Id + 1), squareCounter);
-            });
-            result.Add("Player rolling : ", player);
-            result.Add("rolled", roll);
+            int player = Normalize(playerId, Players.Count);
+            var result = Players[player].Play(Players, roll);
+
             return result;
         }
 

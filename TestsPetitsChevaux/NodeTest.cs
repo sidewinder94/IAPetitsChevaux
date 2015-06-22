@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PetitsChevaux.Game;
 using PetitsChevaux.Plans.MiniMax;
+using PetitsChevaux.Contracts;
 
 namespace TestsPetitsChevaux
 {
@@ -45,8 +46,8 @@ namespace TestsPetitsChevaux
             {
                 if (action != null)
                 {
-                    action.Item1.MoveTo(action.Item3, action.Item2, _startNode.State);
-                    _startNode.RefreshPawns(action.Item1);
+                    action.Subject.MoveTo(action.Type, action.Position, _startNode.State);
+                    _startNode.RefreshPawns(action.Subject);
                 }
                 else
                 {
@@ -89,15 +90,15 @@ namespace TestsPetitsChevaux
             {
                 if (n != null)
                 {
-                    n.Item1.MoveTo(n.Item3, n.Item2, _startNode.State);
-                    _startNode.RefreshPawns(n.Item1);
+                    n.Subject.MoveTo(n.Type, n.Position, _startNode.State);
+                    _startNode.RefreshPawns(n.Subject);
                 }
                 else
                 {
                     _startNode.RefreshPawns();
                 }
 
-                var r = new Tuple<Tuple<Pawn, int, CaseType>, int>(n, _startNode.Evaluate(_startNode.State.Find(p => p.Id == 0)));
+                var r = new Tuple<PetitsChevaux.Contracts.Action, int>(n, _startNode.Evaluate(_startNode.State.Find(p => p.Id == 0)));
 
                 _startNode.RollBack();
 
@@ -105,7 +106,7 @@ namespace TestsPetitsChevaux
             }).ToList();
 
             var best = eval.First(a => a.Item2 == eval.Max(m => m.Item2)).Item1;
-            best.Item1.MoveTo(best.Item3, best.Item2, _startNode.State);
+            best.Subject.MoveTo(best.Type, best.Position, _startNode.State);
 
             var testedPawn = _startNode.State.First(pl => pl.Id == 0).Pawns[3];
 

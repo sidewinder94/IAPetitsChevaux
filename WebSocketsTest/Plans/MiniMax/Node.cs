@@ -45,7 +45,7 @@ namespace PetitsChevaux.Plans.MiniMax
             return this;
         }
 
-        public IEnumerable<Tuple<Pawn, int, CaseType>> GetNextNodes(int playerId = -1)
+        public IEnumerable<Contracts.Action> GetNextNodes(int playerId = -1)
         {
             int roll = Roll;
 
@@ -56,7 +56,7 @@ namespace PetitsChevaux.Plans.MiniMax
                 if (p.Type.Equals(CaseType.Classic))
                 {
                     moved = true;
-                    yield return new Tuple<Pawn, int, CaseType>(p, Board.Normalize(p.Position + roll), CaseType.Classic);
+                    yield return new Contracts.Action(p, Board.Normalize(p.Position + roll), CaseType.Classic);
                 }
 
                 if (p.Type.Equals(CaseType.Classic) &&
@@ -65,21 +65,21 @@ namespace PetitsChevaux.Plans.MiniMax
                     && roll == 1)
                 {
                     moved = true;
-                    yield return new Tuple<Pawn, int, CaseType>(p, 1, CaseType.EndGame);
+                    yield return new Contracts.Action(p, 1, CaseType.EndGame);
 
                 }
 
                 if (p.Type.Equals(CaseType.EndGame) && (roll == p.Position + 1))
                 {
                     moved = true;
-                    yield return new Tuple<Pawn, int, CaseType>(p, roll, CaseType.EndGame);
+                    yield return new Contracts.Action(p, roll, CaseType.EndGame);
                 }
 
                 if (p.Type.Equals(CaseType.Square) && roll == 6)
                 {
                     var cPLayer = State.First(player => player.Id == playerId);
                     moved = true;
-                    yield return new Tuple<Pawn, int, CaseType>(p, cPLayer.StartCase, CaseType.Classic);
+                    yield return new Contracts.Action(p, cPLayer.StartCase, CaseType.Classic);
                 }
             }
             if (!moved)
@@ -90,7 +90,7 @@ namespace PetitsChevaux.Plans.MiniMax
 
         public int Evaluate(Player player)
         {
-            var enScore = State.First(p => p.Id == Board.Normalize(player.Id + 1, Board.PlayerNumber)).Evaluate;
+            var enScore = State.First(p => p.Id == Board.Normalize(player.Id + 1, State.Count)).Evaluate;
             return player.Evaluate - enScore;
         }
 

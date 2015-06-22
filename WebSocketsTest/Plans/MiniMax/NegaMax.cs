@@ -10,17 +10,17 @@ namespace PetitsChevaux.Plans.MiniMax
     {
         private bool _run = true;
 
-        public Tuple<Pawn, int, CaseType> DecisionNegaMax(Node state, int depth, int currentPlayerId)
+        public Contracts.Action DecisionNegaMax(Node state, int depth, int currentPlayerId)
         {
-            var actions = state.GetNextNodes(Board.Normalize(currentPlayerId, Board.PlayerNumber))
-                .Select(st => new Tuple<Tuple<Pawn, int, CaseType>, int>(st, -_DecisionNegaMax(state, depth, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber), st)))
+            var actions = state.GetNextNodes(Board.Normalize(currentPlayerId, state.State.Count))
+                .Select(st => new Tuple<Contracts.Action, int>(st, -_DecisionNegaMax(state, depth, Board.Normalize(currentPlayerId + 1, state.State.Count), st)))
                 .ToList();
 
 
             return actions.First(a => a.Item2 == actions.Max(m => m.Item2)).Item1;
         }
 
-        private int _DecisionNegaMax(Node state, int depth, int currentPlayerId, Tuple<Pawn, int, CaseType> action)
+        private int _DecisionNegaMax(Node state, int depth, int currentPlayerId, Contracts.Action action)
         {
             if (action == null)
             {
@@ -28,8 +28,8 @@ namespace PetitsChevaux.Plans.MiniMax
             }
             else
             {
-                action.Item1.MoveTo(action.Item3, action.Item2, state.State);
-                state.RefreshPawns(action.Item1);
+                action.Subject.MoveTo(action.Type, action.Position, state.State);
+                state.RefreshPawns(action.Subject);
             }
 
             if (!_run || (depth == 0 || state.Any(p => p.Won)))
@@ -47,8 +47,8 @@ namespace PetitsChevaux.Plans.MiniMax
             {
                 state.Roll = roll;
                 rolls[roll - 1] =
-                    state.GetNextNodes(Board.Normalize(currentPlayerId, Board.PlayerNumber))
-                        .Max(a => -_DecisionNegaMax(state, depth - 1, Board.Normalize(currentPlayerId + 1, Board.PlayerNumber), a));
+                    state.GetNextNodes(Board.Normalize(currentPlayerId, state.State.Count))
+                        .Max(a => -_DecisionNegaMax(state, depth - 1, Board.Normalize(currentPlayerId + 1, state.State.Count), a));
 
             }
 
@@ -59,15 +59,13 @@ namespace PetitsChevaux.Plans.MiniMax
 
         private int Utility(Node state, int currentPlayerId)
         {
-            return state.Evaluate(state.State[Board.Normalize(currentPlayerId, Board.PlayerNumber)]);
+            return state.Evaluate(state.State[Board.Normalize(currentPlayerId, state.State.Count)]);
         }
 
 
-        public static int NextMove(Player player, List<Player> board)
+        public static Contracts.Action NextMove(Player player, List<Player> board, int roll)
         {
             var minMax = new NegaMax();
-
-            int roll = Board.RollDice();
 
             Node currentState = new Node { State = board, Roll = roll };
 
@@ -99,9 +97,9 @@ namespace PetitsChevaux.Plans.MiniMax
             }
 
 
-            if (nextState != null) nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, board);
+            if (nextState != null) nextState.Subject.MoveTo(nextState.Type, nextState.Position, board);
 
-            return roll;
+            return nextState;
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using log4net.Core;
 using Newtonsoft.Json;
+using PetitsChevaux.Contracts;
 using SuperSocket.SocketBase;
 using PetitsChevaux.Game;
 using SuperWebSocket;
@@ -10,14 +12,8 @@ namespace PetitsChevaux
 {
     class Program
     {
-
-        private static readonly Dictionary<WebSocketSession, Board> _sessions =
-            new Dictionary<WebSocketSession, Board>();
         static void Main(string[] args)
         {
-
-            Board.PlayerNumber = 2;
-            Board.PawnsPerPlayer = 4;
 
             var appServer = new WebSocketServer();
 
@@ -48,57 +44,21 @@ namespace PetitsChevaux
 
         private static void appServer_NewMessageReceived(WebSocketSession session, string value)
         {
-            var board = _sessions[session];
-            //if (board.Players.Any(p => p.Won))
-            //{
-            //    board.GeneratePlayers();
-            //}
+            var boardStatus = JsonConvert.DeserializeObject<BoardStatus>(value);
 
-            //int i = 100;
-            //board.Run = true;
-            //while (board.Run)
-            //{
-            //    session.Send(JsonConvert.SerializeObject(board.NextTurn()));
+            var board = new Board(boardStatus.State);
 
-            //    if (board.Players.Any(p => p.Won))
-            //    {
-            //        board.Run = false;
-            //        Console.WriteLine("{0} won !", board.Players.First(p => p.Won));
-            //    }
+            session.Send(JsonConvert.SerializeObject(board.NextTurn(boardStatus.PlayerIdIs, boardStatus.Roll)));
 
-            //    System.Threading.Thread.Sleep(i);
-            //}
         }
 
         static void appServer_SessionClosed(WebSocketSession session, CloseReason value)
         {
-            _sessions.Remove(session);
             Console.WriteLine("Session closed for {0}", value);
         }
 
         private static void AppServerOnNewSessionConnected(WebSocketSession session)
         {
-            _sessions.Add(session, new Board());
-            var board = _sessions[session];
-            if (board.Players.Any(p => p.Won))
-            {
-                board.GeneratePlayers();
-            }
-
-            int i = 100;
-            board.Run = true;
-            while (board.Run)
-            {
-                session.Send(JsonConvert.SerializeObject(board.NextTurn()));
-
-                if (board.Players.Any(p => p.Won))
-                {
-                    board.Run = false;
-                    Console.WriteLine("{0} won !", board.Players.First(p => p.Won));
-                }
-
-                System.Threading.Thread.Sleep(i);
-            }
         }
     }
 }

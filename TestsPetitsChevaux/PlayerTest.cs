@@ -43,7 +43,7 @@ namespace TestsPetitsChevaux
         {
             _startPlayer.Pawns[0].MoveTo(CaseType.Classic, 0, _board);
             var eval = _startPlayer.Evaluate;
-            Assert.AreEqual(175616, eval, eval);
+            Assert.AreEqual(3136, eval, eval);
         }
 
         [TestMethod]

@@ -50,7 +50,7 @@ namespace TestsPetitsChevaux
             var nextState = _minMax.DecisionMiniMax(currentState, 3, 0);
 
 
-            Assert.IsTrue(nextState.Item2 == 55, nextState.ToString());
+            Assert.IsTrue(nextState.Position == 55, nextState.ToString());
         }
 
         [TestMethod]
@@ -68,7 +68,7 @@ namespace TestsPetitsChevaux
 
             var nextState = _minMax.DecisionMiniMax(currentState, 3, 0);
 
-            Assert.IsTrue(nextState.Item2 == 1 && nextState.Item3 == CaseType.EndGame,
+            Assert.IsTrue(nextState.Position == 1 && nextState.Type == CaseType.EndGame,
                 nextState.ToString());
         }
 
@@ -87,7 +87,7 @@ namespace TestsPetitsChevaux
 
             var nextState = _minMax.DecisionMiniMax(currentState, 3, 0);
 
-            nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, currentState.State);
+            nextState.Subject.MoveTo(nextState.Type, nextState.Position, currentState.State);
 
             var newPos = currentState.State.First(p => p.Id == 0);
 
@@ -108,7 +108,7 @@ namespace TestsPetitsChevaux
 
             var nextState = _minMax.DecisionMiniMax(currentState, 3, 0);
 
-            nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, currentState.State);
+            nextState.Subject.MoveTo(nextState.Type, nextState.Position, currentState.State);
 
             var newPos = currentState.State.First(p => p.Id == 0).Pawns[1];
 
@@ -133,7 +133,7 @@ namespace TestsPetitsChevaux
 
             var nextState = _minMax.DecisionMiniMax(currentState, 3, 0);
 
-            nextState.Item1.MoveTo(nextState.Item3, nextState.Item2, currentState.State);
+            nextState.Subject.MoveTo(nextState.Type, nextState.Position, currentState.State);
 
             var newPos = currentState.State.First(p => p.Id == 0).Pawns[0];
 

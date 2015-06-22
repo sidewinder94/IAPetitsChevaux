@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using PetitsChevaux.Contracts;
 using PetitsChevaux.Game;
 
 namespace PetitsChevaux.Plans
@@ -7,15 +8,18 @@ namespace PetitsChevaux.Plans
     public static class SimpleMinded
     {
 
-        public static int NextMove(Player player, List<Player> board)
+        public static Contracts.Action NextMove(Player player, List<Player> board, int roll)
         {
-            int roll = Board.RollDice();
+
+            Contracts.Action result = null;
+
             //return roll;
             //Si on peut faire avancer un pion sur les cases de fin
             if (player.Pawns.Any(p => p.Type == CaseType.EndGame && (roll - p.Position) == 1) &&
                 !player.Pawns.Any(t => t.Type == CaseType.EndGame && t.Position == roll))
             {
                 var pawn = player.Pawns.First(p => p.Type == CaseType.EndGame && (roll - p.Position) == 1);
+                result = new Action(pawn, roll, CaseType.EndGame);
                 pawn.MoveTo(CaseType.EndGame, roll, board);
             }
             //Entrée dans les cases de fin de jeu
@@ -25,6 +29,7 @@ namespace PetitsChevaux.Plans
                 var pawn = player.Pawns.First(
                     p => p.Type == CaseType.Classic && p.Position == Board.Normalize(player.StartCase - 1));
 
+                result = new Action(pawn, 1, CaseType.EndGame);
                 pawn.MoveTo(CaseType.EndGame, 1, board);
             }
             //Si le roll est 6 on sort un pion si aucun n'est sur la case de départ
@@ -33,30 +38,24 @@ namespace PetitsChevaux.Plans
                 player.Pawns.Any(p => p.Type == CaseType.Square))
             {
                 var pawn = player.Pawns.First(p => p.Type == CaseType.Square);
+                result = new Action(pawn, player.StartCase, CaseType.Classic);
                 pawn.MoveTo(CaseType.Classic, player.StartCase, board);
 
-                var ennemies = board.Where(e => e != player);
-
-                foreach (var p in
-                    from e in ennemies
-                    where e.Pawns.Any(pa => pa.Position == player.StartCase && pa.Type == CaseType.Classic)
-                    select e.Pawns.First(pa => pa.Position == player.StartCase && pa.Type == CaseType.Classic))
-                {
-                    p.MoveTo(CaseType.Square, 0, board);
-                }
             }
             //Si pas 6 ou que la case de départ est occupée, on avance le premier pion disponible qui n'attends pas pour la fin de jeu
             else if (player.Pawns.Any(p => (p.Type == CaseType.Classic) && (p.Position != (Board.Normalize(player.StartCase - 1)))))
             {
-                player.Pawns.First(p => (p.Type == CaseType.Classic) && (p.Position != (Board.Normalize(player.StartCase - 1)))).Move(roll, board);
+                var pawn = player.Pawns.First(p => (p.Type == CaseType.Classic) && (p.Position != (Board.Normalize(player.StartCase - 1))));
+                result = new Action(pawn, Board.Normalize(pawn.Position + roll), CaseType.Classic);
             }
             //Dans le cas ou on ne peut rien bouger d'autre que le pion attendant pour rentrer
             else if (!player.Pawns.All(p => p.Type == CaseType.Square || p.Type == CaseType.EndGame))
             {
-                player.Pawns.First(p => p.Type == CaseType.Classic).Move(roll, board);
+                var pawn = player.Pawns.First(p => p.Type == CaseType.Classic);
+                result = new Action(pawn, Board.Normalize(pawn.Position + roll), CaseType.Classic);
             }
             //Si aucun des chemins ci-dessus n'a pu être utilisé, on passe son tour
-            return roll;
+            return result;
         }
 
     }
