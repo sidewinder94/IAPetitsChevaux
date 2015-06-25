@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Timers;
@@ -132,7 +130,14 @@ namespace PetitsChevaux.Plans.MiniMax
                 depth++;
             }
 
-            nextState.Subject.MoveTo(nextState.Type, nextState.Position, board);
+            if (nextState == null)
+            {
+                nextState = new Contracts.Action(null, -1, CaseType.Square);
+            }
+            else
+            {
+                nextState.Subject.MoveTo(nextState.Type, nextState.Position, board);
+            }
 
             return nextState;
         }
